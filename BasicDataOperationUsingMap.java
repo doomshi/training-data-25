@@ -1,10 +1,8 @@
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 /**
  * Клас BasicDataOperationUsingMap реалізує операції з колекціями типу Map для зберігання пар ключ-значення.
@@ -30,22 +28,6 @@ public class BasicDataOperationUsingMap {
 
     private Hashtable<Pet, String> hashtable;
     private TreeMap<Pet, String> treeMap;
-
-    /**
-     * Компаратор для сортування Map.Entry за значеннями String.
-     * Використовує метод String.compareTo() для порівняння імен власників.
-     */
-    static class OwnerValueComparator implements Comparator<Map.Entry<Pet, String>> {
-        @Override
-        public int compare(Map.Entry<Pet, String> e1, Map.Entry<Pet, String> e2) {
-            String v1 = e1.getValue();
-            String v2 = e2.getValue();
-            if (v1 == null && v2 == null) return 0;
-            if (v1 == null) return -1;
-            if (v2 == null) return 1;
-            return v1.compareTo(v2);
-        }
-    }
 
     /**
      * Внутрішній клас Pet для зберігання інформації про домашню тварину.
@@ -249,33 +231,30 @@ public class BasicDataOperationUsingMap {
         System.out.println("\n=== Пари ключ-значення в Hashtable ===");
         long timeStart = System.nanoTime();
 
-        for (Map.Entry<Pet, String> entry : hashtable.entrySet()) {
-            System.out.println("  " + entry.getKey() + " -> " + entry.getValue());
-        }
+        hashtable.entrySet().forEach(entry ->
+            System.out.println("  " + entry.getKey() + " -> " + entry.getValue())
+        );
 
         PerformanceTracker.displayOperationTime(timeStart, "виведення пари ключ-значення в Hashtable");
     }
 
     /**
      * Сортує Hashtable за ключами.
-     * Використовує Collections.sort() з природним порядком Pet (Pet.compareTo()).
+     * Використовує Stream API з природним порядком Pet (Pet.compareTo()).
      * Перезаписує hashtable відсортованими даними.
      */
     private void sortHashtable() {
         long timeStart = System.nanoTime();
 
-        // Створюємо список ключів і сортуємо за природним порядком Pet
-        List<Pet> sortedKeys = new ArrayList<>(hashtable.keySet());
-        Collections.sort(sortedKeys);
-        
-        // Створюємо нову Hashtable з відсортованими ключами
-        Hashtable<Pet, String> sortedHashtable = new Hashtable<>();
-        for (Pet key : sortedKeys) {
-            sortedHashtable.put(key, hashtable.get(key));
-        }
-        
-        // Перезаписуємо оригінальну hashtable
-        hashtable = sortedHashtable;
+        // Використовуємо Stream API для сортування та створення нової Hashtable
+        hashtable = hashtable.entrySet().stream()
+                .sorted(Map.Entry.comparingByKey())
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue,
+                        (e1, e2) -> e1,
+                        Hashtable::new
+                ));
 
         PerformanceTracker.displayOperationTime(timeStart, "сортування Hashtable за ключами");
     }
@@ -300,30 +279,21 @@ public class BasicDataOperationUsingMap {
     }
 
     /**
-     * Здійснює пошук елемента за значенням в Hashtable.
-     * Сортує список Map.Entry за значеннями та використовує бінарний пошук.
+     * Здійснює пошук елемента за значенням in Hashtable.
+     * Використовує Stream API для фільтрації та пошуку.
      */
     void findByValueInHashtable() {
         long timeStart = System.nanoTime();
 
-        // Створюємо список Entry та сортуємо за значеннями
-        List<Map.Entry<Pet, String>> entries = new ArrayList<>(hashtable.entrySet());
-        OwnerValueComparator comparator = new OwnerValueComparator();
-        Collections.sort(entries, comparator);
+        // Використовуємо Stream API для пошуку за значенням
+        Map.Entry<Pet, String> foundEntry = hashtable.entrySet().stream()
+                .filter(entry -> VALUE_TO_SEARCH_AND_DELETE.equals(entry.getValue()))
+                .findFirst()
+                .orElse(null);
 
-        // Створюємо тимчасовий Entry для пошуку
-        Map.Entry<Pet, String> searchEntry = new Map.Entry<Pet, String>() {
-            public Pet getKey() { return null; }
-            public String getValue() { return VALUE_TO_SEARCH_AND_DELETE; }
-            public String setValue(String value) { return null; }
-        };
+        PerformanceTracker.displayOperationTime(timeStart, "пошук за значенням в Hashtable");
 
-        int position = Collections.binarySearch(entries, searchEntry, comparator);
-
-        PerformanceTracker.displayOperationTime(timeStart, "бінарний пошук за значенням в Hashtable");
-
-        if (position >= 0) {
-            Map.Entry<Pet, String> foundEntry = entries.get(position);
+        if (foundEntry != null) {
             System.out.println("Власника '" + VALUE_TO_SEARCH_AND_DELETE + "' знайдено. Pet: " + foundEntry.getKey());
         } else {
             System.out.println("Власник '" + VALUE_TO_SEARCH_AND_DELETE + "' відсутній в Hashtable.");
@@ -366,16 +336,13 @@ public class BasicDataOperationUsingMap {
     void removeByValueFromHashtable() {
         long timeStart = System.nanoTime();
 
-        List<Pet> keysToRemove = new ArrayList<>();
-        for (Map.Entry<Pet, String> entry : hashtable.entrySet()) {
-            if (entry.getValue() != null && entry.getValue().equals(VALUE_TO_SEARCH_AND_DELETE)) {
-                keysToRemove.add(entry.getKey());
-            }
-        }
+        // Використовуємо Stream API для пошуку ключів для видалення
+        List<Pet> keysToRemove = hashtable.entrySet().stream()
+                .filter(entry -> entry.getValue() != null && entry.getValue().equals(VALUE_TO_SEARCH_AND_DELETE))
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList());
         
-        for (Pet key : keysToRemove) {
-            hashtable.remove(key);
-        }
+        keysToRemove.forEach(hashtable::remove);
 
         PerformanceTracker.displayOperationTime(timeStart, "видалення за значенням з Hashtable");
 
@@ -392,9 +359,9 @@ public class BasicDataOperationUsingMap {
         System.out.println("\n=== Пари ключ-значення в TreeMap ===");
 
         long timeStart = System.nanoTime();
-        for (Map.Entry<Pet, String> entry : treeMap.entrySet()) {
-            System.out.println("  " + entry.getKey() + " -> " + entry.getValue());
-        }
+        treeMap.forEach((key, value) ->
+            System.out.println("  " + key + " -> " + value)
+        );
 
         PerformanceTracker.displayOperationTime(timeStart, "виведення пар ключ-значення в TreeMap");
     }
@@ -420,29 +387,20 @@ public class BasicDataOperationUsingMap {
 
     /**
      * Здійснює пошук елемента за значенням в TreeMap.
-     * Сортує список Map.Entry за значеннями та використовує бінарний пошук.
+     * Використовує Stream API для фільтрації та пошуку.
      */
     void findByValueInTreeMap() {
         long timeStart = System.nanoTime();
 
-        // Створюємо список Entry та сортуємо за значеннями
-        List<Map.Entry<Pet, String>> entries = new ArrayList<>(treeMap.entrySet());
-        OwnerValueComparator comparator = new OwnerValueComparator();
-        Collections.sort(entries, comparator);
+        // Використовуємо Stream API для пошуку за значенням
+        Map.Entry<Pet, String> foundEntry = treeMap.entrySet().stream()
+                .filter(entry -> VALUE_TO_SEARCH_AND_DELETE.equals(entry.getValue()))
+                .findFirst()
+                .orElse(null);
 
-        // Створюємо тимчасовий Entry для пошуку
-        Map.Entry<Pet, String> searchEntry = new Map.Entry<Pet, String>() {
-            public Pet getKey() { return null; }
-            public String getValue() { return VALUE_TO_SEARCH_AND_DELETE; }
-            public String setValue(String value) { return null; }
-        };
+        PerformanceTracker.displayOperationTime(timeStart, "пошук за значенням в TreeMap");
 
-        int position = Collections.binarySearch(entries, searchEntry, comparator);
-
-        PerformanceTracker.displayOperationTime(timeStart, "бінарний пошук за значенням в TreeMap");
-
-        if (position >= 0) {
-            Map.Entry<Pet, String> foundEntry = entries.get(position);
+        if (foundEntry != null) {
             System.out.println("Власника '" + VALUE_TO_SEARCH_AND_DELETE + "' знайдено. Pet: " + foundEntry.getKey());
         } else {
             System.out.println("Власник '" + VALUE_TO_SEARCH_AND_DELETE + "' відсутній в TreeMap.");
@@ -485,16 +443,13 @@ public class BasicDataOperationUsingMap {
     void removeByValueFromTreeMap() {
         long timeStart = System.nanoTime();
 
-        List<Pet> keysToRemove = new ArrayList<>();
-        for (Map.Entry<Pet, String> entry : treeMap.entrySet()) {
-            if (entry.getValue() != null && entry.getValue().equals(VALUE_TO_SEARCH_AND_DELETE)) {
-                keysToRemove.add(entry.getKey());
-            }
-        }
+        // Використовуємо Stream API для пошуку ключів для видалення
+        List<Pet> keysToRemove = treeMap.entrySet().stream()
+                .filter(entry -> entry.getValue() != null && entry.getValue().equals(VALUE_TO_SEARCH_AND_DELETE))
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList());
         
-        for (Pet key : keysToRemove) {
-            treeMap.remove(key);
-        }
+        keysToRemove.forEach(treeMap::remove);
 
         PerformanceTracker.displayOperationTime(timeStart, "видалення за значенням з TreeMap");
 

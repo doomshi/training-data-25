@@ -5,6 +5,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 /**
  * Клас DataFileHandler управляє роботою з файлами даних LocalDateTime.
@@ -18,27 +20,16 @@ public class DataFileHandler {
      */
     public static LocalDateTime[] loadArrayFromFile(String filePath) {
         DateTimeFormatter timeFormatter = DateTimeFormatter.ISO_DATE_TIME;
-        LocalDateTime[] temporaryArray = new LocalDateTime[1000];
-        int currentIndex = 0;
 
         try (BufferedReader fileReader = new BufferedReader(new FileReader(filePath))) {
-            String currentLine;
-            while ((currentLine = fileReader.readLine()) != null) {
-                // Видаляємо можливі невидимі символи та BOM
-                currentLine = currentLine.trim().replaceAll("^\\uFEFF", "");
-                if (!currentLine.isEmpty()) {
-                    LocalDateTime parsedDateTime = LocalDateTime.parse(currentLine, timeFormatter);
-                    temporaryArray[currentIndex++] = parsedDateTime;
-                }
-            }
+            return fileReader.lines()
+                    .map(currentLine -> currentLine.trim().replaceAll("^\\uFEFF", ""))
+                    .filter(currentLine -> !currentLine.isEmpty())
+                    .map(currentLine -> LocalDateTime.parse(currentLine, timeFormatter))
+                    .toArray(LocalDateTime[]::new);
         } catch (IOException ioException) {
-            ioException.printStackTrace();
+            throw new RuntimeException("Помилка читання даних з файлу: " + filePath, ioException);
         }
-
-        LocalDateTime[] resultArray = new LocalDateTime[currentIndex];
-        System.arraycopy(temporaryArray, 0, resultArray, 0, currentIndex);
-
-        return resultArray;
     }
 
     /**
@@ -49,10 +40,11 @@ public class DataFileHandler {
      */
     public static void writeArrayToFile(LocalDateTime[] dateTimeArray, String filePath) {
         try (BufferedWriter fileWriter = new BufferedWriter(new FileWriter(filePath))) {
-            for (LocalDateTime dateTimeElement : dateTimeArray) {
-                fileWriter.write(dateTimeElement.toString());
-                fileWriter.newLine();
-            }
+            String content = Arrays.stream(dateTimeArray)
+                    .map(LocalDateTime::toString)
+                    .collect(Collectors.joining(System.lineSeparator()));
+            
+            fileWriter.write(content);
         } catch (IOException ioException) {
             ioException.printStackTrace();
         }

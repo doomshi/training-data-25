@@ -71,7 +71,9 @@ public class BasicDataOperationUsingList {
     void performArraySorting() {
         long timeStart = System.nanoTime();
 
-        Arrays.sort(dateTimeArray);
+        dateTimeArray = Arrays.stream(dateTimeArray)
+                      .sorted()
+                      .toArray(LocalDateTime[]::new);
 
         PerformanceTracker.displayOperationTime(timeStart, "упорядкування масиву дати i часу");
     }
@@ -82,7 +84,11 @@ public class BasicDataOperationUsingList {
     void findInArray() {
         long timeStart = System.nanoTime();
 
-        int position = Arrays.binarySearch(this.dateTimeArray, dateTimeValueToSearch);
+        int position = Arrays.stream(dateTimeArray)
+                .map(Arrays.asList(dateTimeArray)::indexOf)
+                .filter(i -> dateTimeValueToSearch.equals(dateTimeArray[i]))
+                .findFirst()
+                .orElse(-1);
 
         PerformanceTracker.displayOperationTime(timeStart, "пошук елемента в масивi дати i часу");
 
@@ -104,17 +110,14 @@ public class BasicDataOperationUsingList {
 
         long timeStart = System.nanoTime();
 
-        LocalDateTime minValue = dateTimeArray[0];
-        LocalDateTime maxValue = dateTimeArray[0];
-
-        for (LocalDateTime currentDateTime : dateTimeArray) {
-            if (currentDateTime.isBefore(minValue)) {
-                minValue = currentDateTime;
-            }
-            if (currentDateTime.isAfter(maxValue)) {
-                maxValue = currentDateTime;
-            }
-        }
+        // Використовуємо Stream API для пошуку мінімуму та максимуму
+        LocalDateTime minValue = Arrays.stream(dateTimeArray)
+                .min(LocalDateTime::compareTo)
+                .orElse(null);
+        
+        LocalDateTime maxValue = Arrays.stream(dateTimeArray)
+                .max(LocalDateTime::compareTo)
+                .orElse(null);
 
         PerformanceTracker.displayOperationTime(timeStart, "визначення мiнiмальної i максимальної дати в масивi");
 
@@ -128,7 +131,11 @@ public class BasicDataOperationUsingList {
     void findInList() {
         long timeStart = System.nanoTime();
 
-        int position = Collections.binarySearch(this.dateTimeList, dateTimeValueToSearch);
+        int position = dateTimeList.stream()
+            .map(dateTimeList::indexOf)
+            .filter(i -> dateTimeValueToSearch.equals(dateTimeList.get(i)))
+            .findFirst()
+            .orElse(-1);
 
         PerformanceTracker.displayOperationTime(timeStart, "пошук елемента в List дати i часу");        
 
@@ -150,8 +157,14 @@ public class BasicDataOperationUsingList {
 
         long timeStart = System.nanoTime();
 
-        LocalDateTime minValue = Collections.min(dateTimeList);
-        LocalDateTime maxValue = Collections.max(dateTimeList);
+        // Використовуємо Stream API для пошуку мінімуму та максимуму
+        LocalDateTime minValue = dateTimeList.stream()
+                .min(LocalDateTime::compareTo)
+                .orElse(null);
+        
+        LocalDateTime maxValue = dateTimeList.stream()
+                .max(LocalDateTime::compareTo)
+                .orElse(null);
 
         PerformanceTracker.displayOperationTime(timeStart, "визначення мiнiмальної i максимальної дати в List");
 
@@ -166,7 +179,9 @@ public class BasicDataOperationUsingList {
     void sortList() {
         long timeStart = System.nanoTime();
 
-        Collections.sort(dateTimeList);
+        dateTimeList = dateTimeList.stream()
+                       .sorted()
+                       .toList();
 
         PerformanceTracker.displayOperationTime(timeStart, "упорядкування ArrayList дати i часу");
     }

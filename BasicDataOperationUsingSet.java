@@ -1,6 +1,5 @@
 import java.time.LocalDateTime;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -66,7 +65,9 @@ public class BasicDataOperationUsingSet {
     private void performArraySorting() {
         long timeStart = System.nanoTime();
 
-        Arrays.sort(dateTimeArray);
+        dateTimeArray = Arrays.stream(dateTimeArray)
+                              .sorted()
+                              .toArray(LocalDateTime[]::new);
 
         PerformanceTracker.displayOperationTime(timeStart, "упорядкування масиву дати i часу");
     }
@@ -77,7 +78,11 @@ public class BasicDataOperationUsingSet {
     private void findInArray() {
         long timeStart = System.nanoTime();
 
-        int position = Arrays.binarySearch(this.dateTimeArray, dateTimeValueToSearch);
+        int position = Arrays.stream(dateTimeArray)
+                .map(Arrays.asList(dateTimeArray)::indexOf)
+                .filter(i -> dateTimeValueToSearch.equals(dateTimeArray[i]))
+                .findFirst()
+                .orElse(-1);
 
         PerformanceTracker.displayOperationTime(timeStart, "пошук елемента в масивi дати i часу");
 
@@ -99,17 +104,14 @@ public class BasicDataOperationUsingSet {
 
         long timeStart = System.nanoTime();
 
-        LocalDateTime minValue = dateTimeArray[0];
-        LocalDateTime maxValue = dateTimeArray[0];
-
-        for (LocalDateTime currentDateTime : dateTimeArray) {
-            if (currentDateTime.isBefore(minValue)) {
-                minValue = currentDateTime;
-            }
-            if (currentDateTime.isAfter(maxValue)) {
-                maxValue = currentDateTime;
-            }
-        }
+        // Використовуємо Stream API для пошуку мінімуму та максимуму
+        LocalDateTime minValue = Arrays.stream(dateTimeArray)
+                .min(LocalDateTime::compareTo)
+                .orElse(null);
+        
+        LocalDateTime maxValue = Arrays.stream(dateTimeArray)
+                .max(LocalDateTime::compareTo)
+                .orElse(null);
 
         PerformanceTracker.displayOperationTime(timeStart, "визначення мiнiмальної i максимальної дати в масивi");
 
@@ -123,7 +125,8 @@ public class BasicDataOperationUsingSet {
     private void findInSet() {
         long timeStart = System.nanoTime();
 
-        boolean elementExists = this.dateTimeSet.contains(dateTimeValueToSearch);
+        boolean elementExists = dateTimeSet.stream()
+            .anyMatch(dateTime -> dateTime.equals(dateTimeValueToSearch));
 
         PerformanceTracker.displayOperationTime(timeStart, "пошук елемента в HashSet дати i часу");
 
@@ -145,8 +148,14 @@ public class BasicDataOperationUsingSet {
 
         long timeStart = System.nanoTime();
 
-        LocalDateTime minValue = Collections.min(dateTimeSet);
-        LocalDateTime maxValue = Collections.max(dateTimeSet);
+        // Використовуємо Stream API для пошуку мінімуму та максимуму
+        LocalDateTime minValue = dateTimeSet.stream()
+                .min(LocalDateTime::compareTo)
+                .orElse(null);
+        
+        LocalDateTime maxValue = dateTimeSet.stream()
+                .max(LocalDateTime::compareTo)
+                .orElse(null);
 
         PerformanceTracker.displayOperationTime(timeStart, "визначення мiнiмальної i максимальної дати в HashSet");
 
@@ -161,13 +170,9 @@ public class BasicDataOperationUsingSet {
         System.out.println("Кiлькiсть елементiв в масивi: " + dateTimeArray.length);
         System.out.println("Кiлькiсть елементiв в HashSet: " + dateTimeSet.size());
 
-        boolean allElementsPresent = true;
-        for (LocalDateTime dateTimeElement : dateTimeArray) {
-            if (!dateTimeSet.contains(dateTimeElement)) {
-                allElementsPresent = false;
-                break;
-            }
-        }
+        // Використовуємо Stream API для перевірки наявності всіх елементів
+        boolean allElementsPresent = Arrays.stream(dateTimeArray)
+                .allMatch(dateTimeSet::contains);
 
         if (allElementsPresent) {
             System.out.println("Всi елементи масиву наявні в HashSet.");
