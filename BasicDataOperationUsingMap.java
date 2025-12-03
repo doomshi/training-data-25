@@ -1,3 +1,4 @@
+import java.util.Comparator;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
@@ -30,138 +31,20 @@ public class BasicDataOperationUsingMap {
     private TreeMap<Pet, String> treeMap;
 
     /**
-     * Внутрішній клас Pet для зберігання інформації про домашню тварину.
+     * Record Pet для зберігання інформації про домашню тварину.
+     * Record автоматично створює конструктор, геттери, equals(), hashCode() та toString().
      * 
-     * Реалізує Comparable<Pet> для визначення природного порядку сортування.
-     * Природний порядок: спочатку за кличкою (nickname) за зростанням, потім за видом (species) за спаданням.
+     * @param nickname кличка тварини
+     * @param species вид тварини
      */
-    public static class Pet implements Comparable<Pet> {
-        private final String nickname;
-        private final String species;
+    public record Pet(String nickname, String species) {}
 
-        public Pet(String nickname) {
-            this.nickname = nickname;
-            this.species = null;
-        }
-
-        public Pet(String nickname, String species) {
-            this.nickname = nickname;
-            this.species = species;
-        }
-
-        public String getNickname() { 
-            return nickname; 
-        }
-
-        public String getSpecies() {
-            return species;
-        }
-
-        /**
-         * Порівнює цей об'єкт Pet з іншим для визначення порядку сортування.
-         * Природний порядок: спочатку за кличкою (nickname) за зростанням, потім за видом (species) за спаданням.
-         * 
-         * @param other Pet об'єкт для порівняння
-         * @return негативне число, якщо цей Pet < other; 
-         *         0, якщо цей Pet == other; 
-         *         позитивне число, якщо цей Pet > other
-         * 
-         * Критерій порівняння: поля nickname (кличка) за зростанням та species (вид) за спаданням.
-         * 
-         * Цей метод використовується:
-         * - TreeMap для автоматичного сортування ключів Pet за nickname (зростання), потім за species (спадання)
-         * - Collections.sort() для сортування Map.Entry за ключами Pet
-         * - Collections.binarySearch() для пошуку в відсортованих колекціях
-         */
-        @Override
-        public int compareTo(Pet other) {
-            if (other == null) return 1;
-            
-            // Спочатку порівнюємо за кличкою (за зростанням)
-            int nicknameComparison = 0;
-            if (this.nickname == null && other.nickname == null) {
-                nicknameComparison = 0;
-            } else if (this.nickname == null) {
-                nicknameComparison = -1;
-            } else if (other.nickname == null) {
-                nicknameComparison = 1;
-            } else {
-                nicknameComparison = this.nickname.compareTo(other.nickname);
-            }
-            
-            // Якщо клички різні, повертаємо результат
-            if (nicknameComparison != 0) {
-                return nicknameComparison;
-            }
-            
-            // Якщо клички однакові, порівнюємо за видом (за спаданням - інвертуємо результат)
-            if (this.species == null && other.species == null) return 0;
-            if (this.species == null) return 1;  // null йде в кінець при спаданні
-            if (other.species == null) return -1;
-            return other.species.compareTo(this.species);  // Інвертоване порівняння для спадання
-        }
-
-        /**
-         * Перевіряє рівність цього Pet з іншим об'єктом.
-         * Два Pet вважаються рівними, якщо їх клички (nickname) та види (species) однакові.
-         * 
-         * @param obj об'єкт для порівняння
-         * @return true, якщо об'єкти рівні; false в іншому випадку
-         * 
-         * Критерій рівності: поля nickname (кличка) та species (вид).
-         * 
-         * Важливо: метод узгоджений з compareTo() - якщо equals() повертає true,
-         * то compareTo() повертає 0, оскільки обидва методи порівнюють за nickname та species.
-         */
-        @Override
-        public boolean equals(Object obj) {
-            if (this == obj) return true;
-            if (obj == null || getClass() != obj.getClass()) return false;
-            Pet pet = (Pet) obj;
-            
-            boolean nicknameEquals = nickname != null ? nickname.equals(pet.nickname) : pet.nickname == null;
-            boolean speciesEquals = species != null ? species.equals(pet.species) : pet.species == null;
-            
-            return nicknameEquals && speciesEquals;
-        }
-
-        /**
-         * Повертає хеш-код для цього Pet.
-         * 
-         * @return хеш-код, обчислений на основі nickname та species
-         * 
-         * Базується на полях nickname та species для узгодженості з equals().
-         * 
-         * Важливо: узгоджений з equals() - якщо два Pet рівні за equals()
-         * (мають однакові nickname та species), вони матимуть однаковий hashCode().
-         */
-        @Override
-        public int hashCode() {
-            // Початкове значення: хеш-код поля nickname (або 0, якщо nickname == null)
-            int result = nickname != null ? nickname.hashCode() : 0;
-            
-            // Комбінуємо хеш-коди полів за формулою: result = 31 * result + hashCode(поле)
-            // Множник 31 - просте число, яке дає хороше розподілення хеш-кодів
-            // і оптимізується JVM як (result << 5) - result
-            // Додаємо хеш-код виду (або 0, якщо species == null) до загального результату
-            result = 31 * result + (species != null ? species.hashCode() : 0);
-            
-            return result;
-        }
-
-        /**
-         * Повертає строкове представлення Pet.
-         * 
-         * @return кличка тварини (nickname), вид (species) та hashCode
-         */
-        @Override
-        public String toString() {
-            if (species != null) {
-                return "Pet{nickname='" + nickname + "', species='" + species + "', hashCode=" + hashCode() + "}";
-            }
-            return "Pet{nickname='" + nickname + "', hashCode=" + hashCode() + "}";
-        }
-    }
+    /**
+     * Компаратор для порівняння об'єктів Pet.
+     * Сортування: спочатку за кличкою (за зростанням), потім за видом (за спаданням).
+     */
+    private static final Comparator<Pet> PET_COMPARATOR = 
+        Comparator.comparing(Pet::nickname).thenComparing(Pet::species, Comparator.reverseOrder());
 
     /**
      * Конструктор, який ініціалізує об'єкт з готовими даними.
@@ -248,7 +131,7 @@ public class BasicDataOperationUsingMap {
 
         // Використовуємо Stream API для сортування та створення нової Hashtable
         hashtable = hashtable.entrySet().stream()
-                .sorted(Map.Entry.comparingByKey())
+                .sorted(Map.Entry.comparingByKey(PET_COMPARATOR))
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,
                         Map.Entry::getValue,
@@ -473,18 +356,17 @@ public class BasicDataOperationUsingMap {
         hashtable.put(new Pet("Муся", "Сова білолиця"), "Стефанія");
         hashtable.put(new Pet("Чіпо", "Сичик-хатник"), "Ярослав");
 
-        TreeMap<Pet, String> treeMap = new TreeMap<Pet, String>() {{
-            put(new Pet("Тум", "Сова вухата"), "Андрій");
-            put(new Pet("Луна", "Полярна сова"), "Ірина");
-            put(new Pet("Барсик", "Сова сіра"), "Олена");
-            put(new Pet("Боні", "Сипуха"), "Олена");
-            put(new Pet("Тайсон", "Сова болотяна"), "Ірина");
-            put(new Pet("Барсик", "Сичик-горобець"), "Андрій");
-            put(new Pet("Ґуфі", "Сова болотяна"), "Тимофій");
-            put(new Pet("Боні", "Сова яструбина"), "Поліна");
-            put(new Pet("Муся", "Сова білолиця"), "Стефанія");
-            put(new Pet("Чіпо", "Сичик-хатник"), "Ярослав");
-        }};
+        TreeMap<Pet, String> treeMap = new TreeMap<>(PET_COMPARATOR);
+        treeMap.put(new Pet("Тум", "Сова вухата"), "Андрій");
+        treeMap.put(new Pet("Луна", "Полярна сова"), "Ірина");
+        treeMap.put(new Pet("Барсик", "Сова сіра"), "Олена");
+        treeMap.put(new Pet("Боні", "Сипуха"), "Олена");
+        treeMap.put(new Pet("Тайсон", "Сова болотяна"), "Ірина");
+        treeMap.put(new Pet("Барсик", "Сичик-горобець"), "Андрій");
+        treeMap.put(new Pet("Ґуфі", "Сова болотяна"), "Тимофій");
+        treeMap.put(new Pet("Боні", "Сова яструбина"), "Поліна");
+        treeMap.put(new Pet("Муся", "Сова білолиця"), "Стефанія");
+        treeMap.put(new Pet("Чіпо", "Сичик-хатник"), "Ярослав");
 
         // Створюємо об'єкт і виконуємо операції
         BasicDataOperationUsingMap operations = new BasicDataOperationUsingMap(hashtable, treeMap);
