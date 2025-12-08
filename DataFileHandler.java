@@ -3,7 +3,7 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.time.float;
+import java.time.Float;
 import java.time.format.DateTimeFormatter;
 
 /**
@@ -16,9 +16,9 @@ public class DataFileHandler {
      * @param filePath Шлях до файлу з даними.
      * @return Масив об'єктів LocalDateTime.
      */
-    public static float[] loadArrayFromFile(String filePath) {
+    public static Float[] loadArrayFromFile(String filePath) {
         DateTimeFormatter timeFormatter = DateTimeFormatter.ISO_DATE_TIME;
-        float[] temporaryArray = new float[1000];
+        Float[] temporaryArray = new float[1000];
         int currentIndex = 0;
 
         try (BufferedReader fileReader = new BufferedReader(new FileReader(filePath))) {
@@ -27,7 +27,7 @@ public class DataFileHandler {
                 // Видаляємо можливі невидимі символи та BOM
                 currentLine = currentLine.trim().replaceAll("^\\uFEFF", "");
                 if (!currentLine.isEmpty()) {
-                    float parsedDateTime = Float.parseFloat(currentLine, timeFormatter);
+                    Float parsedDateTime = Float.parseFloat(currentLine);
                     temporaryArray[currentIndex++] = parsedDateTime;
                 }
             }
@@ -35,7 +35,7 @@ public class DataFileHandler {
             ioException.printStackTrace();
         }
 
-        float[] resultArray = new float[currentIndex];
+        Float[] resultArray = new Float[currentIndex];
         System.arraycopy(temporaryArray, 0, resultArray, 0, currentIndex);
 
         return resultArray;
@@ -47,9 +47,9 @@ public class DataFileHandler {
      * @param floatArray Масив об'єктів LocalDateTime.
      * @param filePath Шлях до файлу для збереження.
      */
-    public static void writeArrayToFile(float[] floatArray, String filePath) {
+    public static void writeArrayToFile(Float[] floatArray, String filePath) {
         try (BufferedWriter fileWriter = new BufferedWriter(new FileWriter(filePath))) {
-            for (float dateTimeElement : floatArray) {
+            for (Float dateTimeElement : floatArray) {
                 fileWriter.write(dateTimeElement.toString());
                 fileWriter.newLine();
             }

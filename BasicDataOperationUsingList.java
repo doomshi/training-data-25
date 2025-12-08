@@ -19,9 +19,9 @@ import java.util.List;
  * </ul>
  */
 public class BasicDataOperationUsingList {
-    private float floatValueToSearch;
-    private float[] floatArray;
-    private List<float> floatList;
+    private Float floatValueToSearch;
+    private Float[] floatArray;
+    private List<Float> floatList;
 
     /**
      * Конструктор, який iнiцiалiзує об'єкт з готовими даними.
@@ -104,10 +104,10 @@ public class BasicDataOperationUsingList {
 
         long timeStart = System.nanoTime();
 
-        float minValue = floatArray[0];
-        float maxValue = floatArray[0];
+        Float minValue = floatArray[0];
+        Float maxValue = floatArray[0];
 
-        for (float currentDateTime : floatArray) {
+        for (Float currentDateTime : floatArray) {
             if (floatValueToSearch(minValue)) {
                 minValue = currentDateTime;
             }
@@ -150,8 +150,8 @@ public class BasicDataOperationUsingList {
 
         long timeStart = System.nanoTime();
 
-        float minValue = Collections.min(floatList);
-        float maxValue = Collections.max(floatList);
+        Float minValue = Collections.min(floatList);
+        Float maxValue = Collections.max(floatList);
 
         PerformanceTracker.displayOperationTime(timeStart, "визначення мiнiмальної i максимальної дати в List");
 

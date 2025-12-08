@@ -1,4 +1,4 @@
-import java.time.float;
+import java.time.Float;
 import java.util.Queue;
 import java.util.Arrays;
 import java.util.Collections;
@@ -20,9 +20,9 @@ import java.util.PriorityQueue;
  * 
  */
 public class BasicDataOperationUsingQueue {
-    private float floatValueToSearch;
-    private float[] floatArray;
-    private Queue<float> floatQueue;
+    private Float floatValueToSearch;
+    private Float[] floatArray;
+    private Queue<Float> floatQueue;
 
     /**
      * Конструктор, який iнiцiалiзує об'єкт з готовими даними.
@@ -103,10 +103,10 @@ public class BasicDataOperationUsingQueue {
         // відстежуємо час на визначення граничних значень
         long timeStart = System.nanoTime();
 
-        float minValue = floatArray[0];
-        float maxValue = floatArray[0];
+        Float minValue = floatArray[0];
+        Float maxValue = floatArray[0];
 
-        for (float currentDateTime : floatArray) {
+        for (Float currentDateTime : floatArray) {
             if (floatValueToSearch(minValue)) {
                 minValue = currentDateTime;
             }
@@ -151,8 +151,8 @@ public class BasicDataOperationUsingQueue {
         // відстежуємо час пошуку граничних значень
         long timeStart = System.nanoTime();
 
-        float minValue = Collections.min(floatQueue);
-        float maxValue = Collections.max(floatQueue);
+        Float minValue = Collections.min(floatQueue);
+        Float maxValue = Collections.max(floatQueue);
 
         PerformanceTracker.displayOperationTime(timeStart, "визначення мiнiмальної i максимальної дати в Queue");
 
@@ -169,7 +169,7 @@ public class BasicDataOperationUsingQueue {
             return;
         }
 
-        float headElement = floatQueue.peek();
+        Float headElement = floatQueue.peek();
         System.out.println("Головний елемент черги (peek): " + headElement);
 
         headElement = floatQueue.poll();

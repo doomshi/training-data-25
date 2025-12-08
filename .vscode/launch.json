@@ -8,6 +8,13 @@
             "type": "java",
             "name": "BasicDataOperation",
             "request": "launch",
+            "mainClass": "BasicDataOperation",
+            "projectName": "training-data-25_de209b35"
+        },
+        {
+            "type": "java",
+            "name": "BasicDataOperation",
+            "request": "launch",
             "mainClass": "${file}",
             "args": "-31388.32"
         }

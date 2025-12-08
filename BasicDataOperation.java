@@ -1,8 +1,8 @@
-import java.time.LocalDateTime;
+import java.time.Float;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.ArrayList;
+import java.util.TreeSet;
+import java.util.LinkedList;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
@@ -34,8 +34,8 @@ import java.util.Queue;
 public class BasicDataOperation {
     static final String PATH_TO_DATA_FILE = "list/float.data";
 
-    float floatValueToSearch;
-    float[] floatArray;
+    Float floatValueToSearch;
+    Float[] floatArray;
 
     private static final String SEPARATOR = "\n" + "=".repeat(80) + "\n";
     private static final String USAGE_MESSAGE = "Використання: java BasicDataOperation <пошукове-значення> \n" +
@@ -52,7 +52,7 @@ public class BasicDataOperation {
 
         // Валідація введеного значення дати
         try {
-            Float.parseFloat(searchValue, DateTimeFormatter.ISO_DATE_TIME);
+            Float.parseFloat(searchValue);
         } catch (Exception e) {
             System.out.println("Помилка: Невірний формат дати-часу. Використовуйте ISO формат (наприклад: 2024-03-16T00:12:38Z)");
             return;
@@ -74,7 +74,7 @@ public class BasicDataOperation {
         System.out.println(SEPARATOR);
         
         // Підготовка даних та перевірка формату
-        floatValueToSearch = Float.parseFloat(args[0], DateTimeFormatter.ISO_DATE_TIME);
+        floatValueToSearch = Float.parseFloat(args[0]);
         floatArray = DataFileHandler.loadArrayFromFile(PATH_TO_DATA_FILE);
         
         runAllOperations();

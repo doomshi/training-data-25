@@ -19,9 +19,9 @@ import java.util.Set;
  * </ul>
  */
 public class BasicDataOperationUsingSet {
-    float floatValueToSearch;
-    float[] floatArray;
-    Set<float> floatSet = new TreeSet<Float>();
+    Float floatValueToSearch;
+    Float[] floatArray;
+    Set<Float> floatSet = new TreeSet<Float>();
 
     /**
      * Конструктор, який iнiцiалiзує об'єкт з готовими даними.
@@ -99,10 +99,10 @@ public class BasicDataOperationUsingSet {
 
         long timeStart = System.nanoTime();
 
-        float minValue = floatArray[0];
-        float maxValue = floatArray[0];
+        Float minValue = floatArray[0];
+        Float maxValue = floatArray[0];
 
-        for (float currentDateTime : floatArray) {
+        for (Float currentDateTime : floatArray) {
             if (floatValueToSearch(minValue)) {
                 minValue = currentDateTime;
             }
@@ -145,8 +145,8 @@ public class BasicDataOperationUsingSet {
 
         long timeStart = System.nanoTime();
 
-        float minValue = Collections.min(floatSet);
-        float maxValue = Collections.max(floatSet);
+        Float minValue = Collections.min(floatSet);
+        Float maxValue = Collections.max(floatSet);
 
         PerformanceTracker.displayOperationTime(timeStart, "визначення мiнiмальної i максимальної дати в TreeSet");
 
@@ -162,7 +162,7 @@ public class BasicDataOperationUsingSet {
         System.out.println("Кiлькiсть елементiв в TreeSet: " + floatSet.size());
 
         boolean allElementsPresent = true;
-        for (float dateTimeElement : floatArray) {
+        for (Float dateTimeElement : floatArray) {
             if (!floatSet.contains(dateTimeElement)) {
                 allElementsPresent = false;
                 break;
