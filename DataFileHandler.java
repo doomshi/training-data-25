@@ -17,7 +17,7 @@ public class DataFileHandler {
      * @return Масив об'єктів LocalDateTime.
      */
     public static Float[] loadArrayFromFile(String filePath) {
-        DateTimeFormatter timeFormatter = DateTimeFormatter.ISO_DATE_TIME;
+        DateTimeFormatter Float = DateTimeFormatter.ISO_DATE_TIME;
         Float[] temporaryArray = new Float[1000];
         int currentIndex = 0;
 
