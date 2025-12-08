@@ -1,5 +1,5 @@
-import java.time.Float;
-import java.util.Queue;
+import java.time.float;
+import java.util.floatQueue;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.PriorityQueue;
@@ -22,7 +22,7 @@ import java.util.PriorityQueue;
 public class BasicDataOperationUsingQueue {
     private Float floatValueToSearch;
     private Float[] floatArray;
-    private Queue<Float> floatQueue;
+    private PriorityQueue<Float> floatQueue;
 
     /**
      * Конструктор, який iнiцiалiзує об'єкт з готовими даними.
@@ -107,10 +107,10 @@ public class BasicDataOperationUsingQueue {
         Float maxValue = floatArray[0];
 
         for (Float currentDateTime : floatArray) {
-            if (floatValueToSearch(minValue)) {
+            if (floatValueToSearch < minValue) {
                 minValue = currentDateTime;
             }
-            if (floatValueToSearch(maxValue)) {
+            if (floatValueToSearch > maxValue) {
                 maxValue = currentDateTime;
             }
         }

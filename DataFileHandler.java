@@ -18,7 +18,7 @@ public class DataFileHandler {
      */
     public static Float[] loadArrayFromFile(String filePath) {
         DateTimeFormatter timeFormatter = DateTimeFormatter.ISO_DATE_TIME;
-        Float[] temporaryArray = new float[1000];
+        Float[] temporaryArray = new Float[1000];
         int currentIndex = 0;
 
         try (BufferedReader fileReader = new BufferedReader(new FileReader(filePath))) {

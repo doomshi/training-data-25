@@ -1,8 +1,10 @@
-import java.time.float;
+import java.time.Float;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.floatSet;
+import java.util.TreeSet;
 
 /**
  * Клас BasicDataOperationUsingSet реалізує операції з множиною TreeSet для LocalDateTime.
@@ -103,10 +105,10 @@ public class BasicDataOperationUsingSet {
         Float maxValue = floatArray[0];
 
         for (Float currentDateTime : floatArray) {
-            if (floatValueToSearch(minValue)) {
+            if (floatValueToSearch < minValue) {
                 minValue = currentDateTime;
             }
-            if (floatValueToSearch(maxValue)) {
+            if (floatValueToSearch > maxValue) {
                 maxValue = currentDateTime;
             }
         }

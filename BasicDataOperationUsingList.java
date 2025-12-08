@@ -1,4 +1,4 @@
-import java.time.LocalDateTime;
+import java.time.Float;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -31,8 +31,12 @@ public class BasicDataOperationUsingList {
      */
     BasicDataOperationUsingList(float floatValueToSearch, float[] floatArray) {
         this.floatValueToSearch = floatValueToSearch;
-        this.floatArray = floatArray;
-        this.floatList = new LinkedList<Float>(Arrays.asList(floatArray));
+        Float[] boxedArray = new Float[floatArray.length];
+        for (int i = 0; i < floatArray.length; i++) {
+            boxedArray[i] = floatArray[i];
+        }
+        this.floatArray = boxedArray;
+        this.floatList = new ArrayList<Float>(Arrays.asList(boxedArray));
     }
     
     /**
@@ -108,10 +112,10 @@ public class BasicDataOperationUsingList {
         Float maxValue = floatArray[0];
 
         for (Float currentDateTime : floatArray) {
-            if (floatValueToSearch(minValue)) {
+            if (floatValueToSearch < minValue) {
                 minValue = currentDateTime;
             }
-            if (floatValueToSearch(maxValue)) {
+            if (floatValueToSearch > maxValue) {
                 maxValue = currentDateTime;
             }
         }
