@@ -32,10 +32,10 @@ import java.util.Queue;
  * </pre>
  */
 public class BasicDataOperation {
-    static final String PATH_TO_DATA_FILE = "list/LocalDateTime.data";
+    static final String PATH_TO_DATA_FILE = "list/float.data";
 
-    LocalDateTime dateTimeValueToSearch;
-    LocalDateTime[] dateTimeArray;
+    float floatValueToSearch;
+    float[] floatArray;
 
     private static final String SEPARATOR = "\n" + "=".repeat(80) + "\n";
     private static final String USAGE_MESSAGE = "Використання: java BasicDataOperation <пошукове-значення> \n" +
@@ -52,7 +52,7 @@ public class BasicDataOperation {
 
         // Валідація введеного значення дати
         try {
-            LocalDateTime.parse(searchValue, DateTimeFormatter.ISO_DATE_TIME);
+            Float.parseFloat(searchValue, DateTimeFormatter.ISO_DATE_TIME);
         } catch (Exception e) {
             System.out.println("Помилка: Невірний формат дати-часу. Використовуйте ISO формат (наприклад: 2024-03-16T00:12:38Z)");
             return;
@@ -69,13 +69,13 @@ public class BasicDataOperation {
      */
     private void executeOperations(String[] args) {
         System.out.println(SEPARATOR);
-        System.out.println("🚀 РОЗПОЧАТО АНАЛІЗ ДАНИХ LocalDateTime 🚀");
+        System.out.println("🚀 РОЗПОЧАТО АНАЛІЗ ДАНИХ float 🚀");
         System.out.println("Пошуковий параметр: " + args[0]);
         System.out.println(SEPARATOR);
         
         // Підготовка даних та перевірка формату
-        dateTimeValueToSearch = LocalDateTime.parse(args[0], DateTimeFormatter.ISO_DATE_TIME);
-        dateTimeArray = DataFileHandler.loadArrayFromFile(PATH_TO_DATA_FILE);
+        floatValueToSearch = Float.parseFloat(args[0], DateTimeFormatter.ISO_DATE_TIME);
+        floatArray = DataFileHandler.loadArrayFromFile(PATH_TO_DATA_FILE);
         
         runAllOperations();
 
@@ -95,7 +95,7 @@ public class BasicDataOperation {
         
         try {
             // Створення екземпляру класу з передаванням даних
-            BasicDataOperationUsingList listProcessor = new BasicDataOperationUsingList(dateTimeValueToSearch, dateTimeArray);
+            BasicDataOperationUsingList listProcessor = new BasicDataOperationUsingList(floatValueToSearch, floatArray);
             listProcessor.executeDataOperations();
         } catch (Exception e) {
             System.out.println("❌ Помилка при роботі з List: " + e.getMessage());
@@ -114,7 +114,7 @@ public class BasicDataOperation {
         
         try {
             // Створення екземпляру класу з передаванням даних
-            BasicDataOperationUsingQueue queueProcessor = new BasicDataOperationUsingQueue(dateTimeValueToSearch, dateTimeArray);
+            BasicDataOperationUsingQueue queueProcessor = new BasicDataOperationUsingQueue(floatValueToSearch, floatArray);
             queueProcessor.runDataProcessing();
         } catch (Exception e) {
             System.out.println("❌ Помилка при роботі з Queue: " + e.getMessage());
@@ -133,7 +133,7 @@ public class BasicDataOperation {
         
         try {
             // Створення екземпляру класу з передаванням даних           
-            BasicDataOperationUsingSet setProcessor = new BasicDataOperationUsingSet(dateTimeValueToSearch, dateTimeArray);
+            BasicDataOperationUsingSet setProcessor = new BasicDataOperationUsingSet(floatValueToSearch, floatArray);
             setProcessor.executeDataAnalysis();
         } catch (Exception e) {
             System.out.println("❌ Помилка при роботі з Set: " + e.getMessage());
