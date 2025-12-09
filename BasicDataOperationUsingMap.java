@@ -1,4 +1,3 @@
-import java.util.Float;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Hashtable;
@@ -137,8 +136,8 @@ public class BasicDataOperationUsingMap {
             if (obj == null || getClass() != obj.getClass()) return false;
             Pet pet = (Pet) obj;
             
-            boolean nicknameEquals = nickname != null ? nickname.equals(pet.nickname) : pet.nickname == null;
-            boolean speciesEquals = species != null ? species.equals(pet.species) : pet.species == null;
+            boolean nicknameEquals = nickname != null ? nickname.equals(Pet.nickname) : Pet.nickname == null;
+            boolean speciesEquals = species != null ? species.equals(Pet.species) : Pet.species == null;
             
             return nicknameEquals && speciesEquals;
         }
@@ -507,28 +506,28 @@ public class BasicDataOperationUsingMap {
     public static void main(String[] args) {
         // Створюємо початкові дані (ключ: Pet, значення: ім'я власника)
         Hashtable<Pet, String> hashtable = new Hashtable<>();
-        hashtable.put(new Pet("Тум", "Сова вухата"), "Андрій");
-        hashtable.put(new Pet("Луна", "Полярна сова"), "Ірина");
-        hashtable.put(new Pet("Барсик", "Сова сіра"), "Олена");
-        hashtable.put(new Pet("Боні", "Сипуха"), "Олена");
-        hashtable.put(new Pet("Тайсон", "Сова болотяна"), "Ірина");
-        hashtable.put(new Pet("Барсик", "Сичик-горобець"), "Андрій");
-        hashtable.put(new Pet("Ґуфі", "Сова болотяна"), "Тимофій");
-        hashtable.put(new Pet("Боні", "Сова яструбина"), "Поліна");
-        hashtable.put(new Pet("Муся", "Сова білолиця"), "Стефанія");
-        hashtable.put(new Pet("Чіпо", "Сичик-хатник"), "Ярослав");
+        hashtable.put(new Pet("Атлант", "Сова вухата"), "Руслан");
+        hashtable.put(new Pet("Броня", "Полярна сова"), "Олеся");
+        hashtable.put(new Pet("Вічність", "Сова сіра"), "Микола");
+        hashtable.put(new Pet("Гном", "Сипуха"), "Аліна");
+        hashtable.put(new Pet("Броня", "Сова болотяна"), "Тимур");
+        hashtable.put(new Pet("Дзвін", "Сичик-горобець"), "Микола");
+        hashtable.put(new Pet("Еон", "Сова болотяна"), "Софія");
+        hashtable.put(new Pet("Жук", "Сова яструбина"), "Віталій");
+        hashtable.put(new Pet("Зевс", "Сова білолиця"), "Олеся");
+        hashtable.put(new Pet("Ікар", "Сичик-хатник"), "Надія");
 
         TreeMap<Pet, String> treeMap = new TreeMap<Pet, String>() {{
-            put(new Pet("Тум", "Сова вухата"), "Андрій");
-            put(new Pet("Луна", "Полярна сова"), "Ірина");
-            put(new Pet("Барсик", "Сова сіра"), "Олена");
-            put(new Pet("Боні", "Сипуха"), "Олена");
-            put(new Pet("Тайсон", "Сова болотяна"), "Ірина");
-            put(new Pet("Барсик", "Сичик-горобець"), "Андрій");
-            put(new Pet("Ґуфі", "Сова болотяна"), "Тимофій");
-            put(new Pet("Боні", "Сова яструбина"), "Поліна");
-            put(new Pet("Муся", "Сова білолиця"), "Стефанія");
-            put(new Pet("Чіпо", "Сичик-хатник"), "Ярослав");
+            put(new Pet("Атлант", "Сова вухата"), "Руслан");
+            put(new Pet("Броня", "Полярна сова"), "Олеся");
+            put(new Pet("Вічність", "Сова сіра"), "Микола");
+            put(new Pet("Гном", "Сипуха"), "Аліна");
+            put(new Pet("Броня", "Сова болотяна"), "Тимур");
+            put(new Pet("Дзвін", "Сичик-горобець"), "Микола");
+            put(new Pet("Еон", "Сова болотяна"), "Софія");
+            put(new Pet("Жук", "Сова яструбина"), "Віталій");
+            put(new Pet("Зевс", "Сова білолиця"), "Олеся");
+            put(new Pet("Ікар", "Сичик-хатник"), "Надія");
         }};
 
         // Створюємо об'єкт і виконуємо операції
