@@ -1,7 +1,7 @@
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Hashtable;
-import java.util.LinkedList;
+import java.util.Vector;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -264,7 +264,7 @@ public class BasicDataOperationUsingMap {
         long timeStart = System.nanoTime();
 
         // Створюємо список ключів і сортуємо за природним порядком Pet
-        LinkedList<Pet> sortedKeys = new LinkedList<>(hashtable.keySet());
+        Vector<Pet> sortedKeys = new Vector<>(hashtable.keySet());
         Collections.sort(sortedKeys);
         
         // Створюємо нову Hashtable з відсортованими ключами
@@ -306,7 +306,7 @@ public class BasicDataOperationUsingMap {
         long timeStart = System.nanoTime();
 
         // Створюємо список Entry та сортуємо за значеннями
-        LinkedList<Map.Entry<Pet, String>> entries = new LinkedList<>(hashtable.entrySet());
+        Vector<Map.Entry<Pet, String>> entries = new Vector<>(hashtable.entrySet());
         OwnerValueComparator comparator = new OwnerValueComparator();
         Collections.sort(entries, comparator);
 
@@ -365,7 +365,7 @@ public class BasicDataOperationUsingMap {
     void removeByValueFromHashtable() {
         long timeStart = System.nanoTime();
 
-        LinkedList<Pet> keysToRemove = new LinkedList<>();
+        Vector<Pet> keysToRemove = new Vector<>();
         for (Map.Entry<Pet, String> entry : hashtable.entrySet()) {
             if (entry.getValue() != null && entry.getValue().equals(VALUE_TO_SEARCH_AND_DELETE)) {
                 keysToRemove.add(entry.getKey());
@@ -425,7 +425,7 @@ public class BasicDataOperationUsingMap {
         long timeStart = System.nanoTime();
 
         // Створюємо список Entry та сортуємо за значеннями
-        LinkedList<Map.Entry<Pet, String>> entries = new LinkedList<>(treeMap.entrySet());
+        Vector<Map.Entry<Pet, String>> entries = new Vector<>(treeMap.entrySet());
         OwnerValueComparator comparator = new OwnerValueComparator();
         Collections.sort(entries, comparator);
 
@@ -484,7 +484,7 @@ public class BasicDataOperationUsingMap {
     void removeByValueFromTreeMap() {
         long timeStart = System.nanoTime();
 
-        LinkedList<Pet> keysToRemove = new LinkedList<>();
+        Vector<Pet> keysToRemove = new Vector<>();
         for (Map.Entry<Pet, String> entry : treeMap.entrySet()) {
             if (entry.getValue() != null && entry.getValue().equals(VALUE_TO_SEARCH_AND_DELETE)) {
                 keysToRemove.add(entry.getKey());
