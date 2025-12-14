@@ -136,18 +136,18 @@ public class BasicDataOperationUsingList {
         PerformanceTracker.displayOperationTime(timeStart, "пошук елемента в List дати i часу");        
 
         if (position >= 0) {
-            System.out.println("Елемент '" + floatValueToSearch + "' знайдено в LinkedList за позицією: " + position);
+            System.out.println("Елемент '" + floatValueToSearch + "' знайдено в Vector за позицією: " + position);
         } else {
-            System.out.println("Елемент '" + floatValueToSearch + "' відсутній в LinkedList.");
+            System.out.println("Елемент '" + floatValueToSearch + "' відсутній в Vector.");
         }
     }
 
     /**
-     * Визначає найменше і найбільше значення в колекції LinkedList з датами.
+     * Визначає найменше і найбільше значення в колекції Vector з датами.
      */
     void locateMinMaxInList() {
         if (floatList == null || floatList.isEmpty()) {
-            System.out.println("Колекція LinkedList є пустою або не ініціалізованою.");
+            System.out.println("Колекція Vector є пустою або не ініціалізованою.");
             return;
         }
 
@@ -171,6 +171,6 @@ public class BasicDataOperationUsingList {
 
         Collections.sort(floatList);
 
-        PerformanceTracker.displayOperationTime(timeStart, "упорядкування LinkedList дати i часу");
+        PerformanceTracker.displayOperationTime(timeStart, "упорядкування Vector дати i часу");
     }
 }
