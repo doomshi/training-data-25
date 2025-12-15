@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 /**
  * Клас BasicDataOperationUsingMap реалізує операції з колекціями типу Map для
@@ -41,7 +42,7 @@ public class BasicDataOperationUsingMap {
      * Компаратор для сортування Map.Entry за значеннями String.
      * Використовує метод String.compareTo() для порівняння імен власників.
      */
-    static class HashMap implements Comparator<Map.Entry<Tortoise, String>> {
+    static class EntryValueComparator implements Comparator<Map.Entry<Tortoise, String>> {
         @Override
         public int compare(Map.Entry<Tortoise, String> e1, Map.Entry<Tortoise, String> e2) {
             String v1 = e1.getValue();
@@ -280,13 +281,7 @@ public class BasicDataOperationUsingMap {
     void findByKeyInHashMap() {
         long timeStart = System.nanoTime();
 
-        hashMap = hashMap.entrySet().stream()
-                .sorted(Map.Entry.comparingByKey())
-                .collect(Collectors.toMap(
-                        Map.Entry::getKey,
-                        Map.Entry::getValue,
-                        (e1, e2) -> e1,
-                        HashMap::new));
+        boolean found = hashMap.containsKey(KEY_TO_SEARCH_AND_DELETE);
 
         PerformanceTracker.displayOperationTime(timeStart, "пошук за ключем в HashMap");
 
@@ -305,17 +300,14 @@ public class BasicDataOperationUsingMap {
     void findByValueInHashMap() {
         long timeStart = System.nanoTime();
 
-        List<Tortoise> keysToRemove = hashMap.entrySet().stream()
+        Map.Entry<Tortoise, String> foundEntry = hashMap.entrySet().stream()
                 .filter(entry -> entry.getValue() != null && entry.getValue().equals(VALUE_TO_SEARCH_AND_DELETE))
-                .map(Map.Entry::getKey)
-                .collect(Collectors.toList());
+                .findFirst()
+                .orElse(null);
 
-        keysToRemove.forEach(hashMap::remove);
+        PerformanceTracker.displayOperationTime(timeStart, "пошук за значенням в HashMap");
 
-        PerformanceTracker.displayOperationTime(timeStart, "бінарний пошук за значенням в HashMap");
-
-        if (position >= 0) {
-            Map.Entry<Tortoise, String> foundEntry = entries.get(position);
+        if (foundEntry != null) {
             System.out.println(
                     "Власника '" + VALUE_TO_SEARCH_AND_DELETE + "' знайдено. Tortoise: " + foundEntry.getKey());
         } else {
@@ -423,7 +415,7 @@ public class BasicDataOperationUsingMap {
 
         // Створюємо список Entry та сортуємо за значеннями
         List<Map.Entry<Tortoise, String>> entries = new ArrayList<>(treeMap.entrySet());
-        HashMap comparator = new HashMap();
+        EntryValueComparator comparator = new EntryValueComparator();
         Collections.sort(entries, comparator);
 
         // Створюємо тимчасовий Entry для пошуку
@@ -491,7 +483,7 @@ public class BasicDataOperationUsingMap {
     void removeByValueFromTreeMap() {
         long timeStart = System.nanoTime();
 
-        List<Pet> keysToRemove = treeMap.entrySet().stream()
+        List<Tortoise> keysToRemove = treeMap.entrySet().stream()
                 .filter(entry -> entry.getValue() != null && entry.getValue().equals(VALUE_TO_SEARCH_AND_DELETE))
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toList());
