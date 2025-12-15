@@ -8,8 +8,11 @@
             "type": "java",
             "name": "BasicDataOperation",
             "request": "launch",
-            "mainClass": "${file}",
-            "args": "-31388.32"
+            "mainClass": "BasicDataOperation",
+            "args": "-31388.32",
+            "classPaths": [
+                "${workspaceFolder}"
+            ]
         }
     ]
 }
