@@ -3,7 +3,6 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -18,15 +17,15 @@ public class DataFileHandler {
      * @param filePath Шлях до файлу з даними.
      * @return Масив об'єктів LocalDateTime.
      */
-    public static LocalDateTime[] loadArrayFromFile(String filePath) {
+    public static Float[] loadArrayFromFile(String filePath) {
         DateTimeFormatter timeFormatter = DateTimeFormatter.ISO_DATE_TIME;
 
         try (BufferedReader fileReader = new BufferedReader(new FileReader(filePath))) {
             return fileReader.lines()
                     .map(currentLine -> currentLine.trim().replaceAll("^\\uFEFF", ""))
                     .filter(currentLine -> !currentLine.isEmpty())
-                    .map(currentLine -> LocalDateTime.parse(currentLine, timeFormatter))
-                    .toArray(LocalDateTime[]::new);
+                    .map(currentLine -> Float.parseFloat(currentLine))
+                    .toArray(Float[]::new);
         } catch (IOException ioException) {
             throw new RuntimeException("Помилка читання даних з файлу: " + filePath, ioException);
         }
@@ -38,9 +37,9 @@ public class DataFileHandler {
      * @param dateTimeArray Масив об'єктів LocalDateTime.
      * @param filePath      Шлях до файлу для збереження.
      */
-    public static void writeArrayToFile(LocalDateTime[] dateTimeArray, String filePath) {
+    public static void writeArrayToFile(Float[] floatArray, String filePath) {
         try (BufferedWriter fileWriter = new BufferedWriter(new FileWriter(filePath))) {
-            String content = Arrays.stream(dateTimeArray)
+            String content = Arrays.stream(floatArray)
                     .map(String::valueOf)
                     .collect(Collectors.joining(System.lineSeparator()));
 
