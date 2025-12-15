@@ -62,7 +62,7 @@ public class BasicDataOperationUsingQueue {
         locateMinMaxInArray();
 
         // зберігаємо відсортований масив до файлу
-        DataFileHandler.writeArrayToFile(floatArray, BasicDataOperation.PATH_TO_DATA_FILE + ".sorted");
+        DataFileHandler.writeFloatArrayToFile(floatArray, BasicDataOperation.PATH_TO_DATA_FILE + ".sorted");
     }
 
     /**

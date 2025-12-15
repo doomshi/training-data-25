@@ -48,4 +48,40 @@ public class DataFileHandler {
             ioException.printStackTrace();
         }
     }
+
+    /**
+     * Завантажує масив об'єктів Float з файлу.
+     * 
+     * @param filePath Шлях до файлу з даними.
+     * @return Масив об'єктів Float.
+     */
+    public static Float[] loadFloatArrayFromFile(String filePath) {
+        try (BufferedReader fileReader = new BufferedReader(new FileReader(filePath))) {
+            return fileReader.lines()
+                    .map(currentLine -> currentLine.trim().replaceAll("^\\uFEFF", ""))
+                    .filter(currentLine -> !currentLine.isEmpty())
+                    .map(Float::parseFloat)
+                    .toArray(Float[]::new);
+        } catch (IOException ioException) {
+            throw new RuntimeException("Помилка читання даних з файлу: " + filePath, ioException);
+        }
+    }
+
+    /**
+     * Зберігає масив об'єктів Float у файл.
+     * 
+     * @param floatArray Масив об'єктів Float.
+     * @param filePath   Шлях до файлу для збереження.
+     */
+    public static void writeFloatArrayToFile(Float[] floatArray, String filePath) {
+        try (BufferedWriter fileWriter = new BufferedWriter(new FileWriter(filePath))) {
+            String content = Arrays.stream(floatArray)
+                    .map(String::valueOf)
+                    .collect(Collectors.joining(System.lineSeparator()));
+
+            fileWriter.write(content);
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
+        }
+    }
 }

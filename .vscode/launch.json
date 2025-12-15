@@ -12,7 +12,10 @@
             "args": "-31388.32",
             "classPaths": [
                 "${workspaceFolder}"
-            ]
+            ],
+            "console": "integratedTerminal",
+            "vmArgs": "-Djava.net.preferIPv4Stack=true -Dfile.encoding=UTF-8",
+            "cwd": "${workspaceFolder}"
         }
     ]
 }

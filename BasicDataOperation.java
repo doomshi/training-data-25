@@ -16,8 +16,7 @@ public class BasicDataOperation {
     private Float[] floatArray;
 
     private static final String SEPARATOR = "\n" + "=".repeat(80) + "\n";
-    private static final String USAGE_MESSAGE =
-            "Використання: java BasicDataOperation [пошукове-значення]\n" +
+    private static final String USAGE_MESSAGE = "Використання: java BasicDataOperation [пошукове-значення]\n" +
             "Якщо значення не вказано, буде використано значення за замовчуванням: -31388.32\n" +
             "Приклад:\n" +
             "  java BasicDataOperation -31388.32";
@@ -54,10 +53,10 @@ public class BasicDataOperation {
         this.valueToSearch = searchValue;
         System.out.println("Пошуковий параметр: " + this.valueToSearch);
         System.out.println(SEPARATOR);
-        
+
         // Завантажуємо дані з файлу у Float[]
-        floatArray = DataFileHandler.loadArrayFromFile(PATH_TO_DATA_FILE);
-        
+        floatArray = DataFileHandler.loadFloatArrayFromFile(PATH_TO_DATA_FILE);
+
         runAllOperations();
 
         System.out.println(SEPARATOR);
@@ -73,7 +72,7 @@ public class BasicDataOperation {
     private void runListOperations() {
         System.out.println("📋 ОБРОБКА ДАНИХ З ВИКОРИСТАННЯМ LIST");
         System.out.println("-".repeat(50));
-        
+
         try {
             // Створення екземпляру класу з передаванням даних
             BasicDataOperationUsingList listProcessor = new BasicDataOperationUsingList(valueToSearch, floatArray);
@@ -92,7 +91,7 @@ public class BasicDataOperation {
     private void runQueueOperations() {
         System.out.println("🔄 ОБРОБКА ДАНИХ З ВИКОРИСТАННЯМ QUEUE");
         System.out.println("-".repeat(50));
-        
+
         try {
             // Створення екземпляру класу з передаванням даних
             BasicDataOperationUsingQueue queueProcessor = new BasicDataOperationUsingQueue(valueToSearch, floatArray);
@@ -111,9 +110,9 @@ public class BasicDataOperation {
     private void runSetOperations() {
         System.out.println("🔍 ОБРОБКА ДАНИХ З ВИКОРИСТАННЯМ SET");
         System.out.println("-".repeat(50));
-        
+
         try {
-            // Створення екземпляру класу з передаванням даних           
+            // Створення екземпляру класу з передаванням даних
             BasicDataOperationUsingSet setProcessor = new BasicDataOperationUsingSet(valueToSearch, floatArray);
             setProcessor.executeDataAnalysis();
         } catch (Exception e) {
@@ -130,15 +129,15 @@ public class BasicDataOperation {
     private void runAllOperations() {
         System.out.println("🎯 КОМПЛЕКСНИЙ АНАЛІЗ ВСІХ СТРУКТУР ДАНИХ");
         System.out.println("=".repeat(60));
-        
+
         // Обробка List
         runListOperations();
         System.out.println("\n" + "~".repeat(60) + "\n");
-        
-        // Обробка Queue  
+
+        // Обробка Queue
         runQueueOperations();
         System.out.println("\n" + "~".repeat(60) + "\n");
-        
+
         // Обробка Set
         runSetOperations();
     }

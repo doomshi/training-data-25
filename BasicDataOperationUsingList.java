@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
+import java.util.stream.Collectors;
 
 /**
  * Клас BasicDataOperationUsingList реалізує операції з колекціями типу List:
@@ -11,7 +12,7 @@ import java.util.Vector;
  */
 public class BasicDataOperationUsingList {
     private final Float floatValueToSearch;
-    private final Float[] floatArray;
+    private Float[] floatArray;
 
     private final ArrayList<Float> arrayList;
     private final LinkedList<Float> linkedList;
@@ -71,7 +72,7 @@ public class BasicDataOperationUsingList {
         locateMinMaxInArray();
 
         // Зберігаємо відсортований масив до окремого файлу
-        DataFileHandler.writeArrayToFile(floatArray, BasicDataOperation.PATH_TO_DATA_FILE + ".sorted");
+        DataFileHandler.writeFloatArrayToFile(floatArray, BasicDataOperation.PATH_TO_DATA_FILE + ".sorted");
     }
 
     /**
@@ -210,12 +211,12 @@ public class BasicDataOperationUsingList {
 
         long timeStart = System.nanoTime();
 
-        Float min = Arrays.stream(floatArray)
-                .minValue(Float::compareTo)
+        Float minValue = Arrays.stream(floatArray)
+                .min(Float::compareTo)
                 .orElse(null);
 
-        Float max = Arrays.stream(floatArray)
-                .maxValue(Float::compareTo)
+        Float maxValue = Arrays.stream(floatArray)
+                .max(Float::compareTo)
                 .orElse(null);
 
         PerformanceTracker.displayOperationTime(timeStart,
