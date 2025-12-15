@@ -4,17 +4,23 @@ import java.util.PriorityQueue;
 import java.util.Queue;
 
 /**
- * Клас BasicDataOperationUsingQueue реалізує роботу з PriorityQueue для даних типу float (Float).
+ * Клас BasicDataOperationUsingQueue реалізує роботу з PriorityQueue для даних
+ * типу float (Float).
  * 
- * <p>Основні функції класу:</p>
+ * <p>
+ * Основні функції класу:
+ * </p>
  * <ul>
- *   <li>{@link #runDataProcessing()} - Запускає комплекс операцій з даними.</li>
- *   <li>{@link #performArraySorting()} - Упорядковує масив LocalDateTime.</li>
- *   <li>{@link #findInArray()} - Пошук значення в масиві LocalDateTime.</li>
- *   <li>{@link #locateMinMaxInArray()} - Знаходить мінімальне і максимальне значення в масиві.</li>
- *   <li>{@link #findInQueue()} - Пошук значення в черзі LocalDateTime.</li>
- *   <li>{@link #locateMinMaxInQueue()} - Знаходить граничні значення в черзі.</li>
- *   <li>{@link #performQueueOperations()} - Виконує операції peek і poll з чергою.</li>
+ * <li>{@link #runDataProcessing()} - Запускає комплекс операцій з даними.</li>
+ * <li>{@link #performArraySorting()} - Упорядковує масив LocalDateTime.</li>
+ * <li>{@link #findInArray()} - Пошук значення в масиві LocalDateTime.</li>
+ * <li>{@link #locateMinMaxInArray()} - Знаходить мінімальне і максимальне
+ * значення в масиві.</li>
+ * <li>{@link #findInQueue()} - Пошук значення в черзі LocalDateTime.</li>
+ * <li>{@link #locateMinMaxInQueue()} - Знаходить граничні значення в
+ * черзі.</li>
+ * <li>{@link #performQueueOperations()} - Виконує операції peek і poll з
+ * чергою.</li>
  * </ul>
  * 
  */
@@ -27,14 +33,14 @@ public class BasicDataOperationUsingQueue {
      * Конструктор, який iнiцiалiзує об'єкт з готовими даними.
      * 
      * @param floatValueToSearch Значення для пошуку
-     * @param floatArray Масив Float[]
+     * @param floatArray         Масив Float[]
      */
     BasicDataOperationUsingQueue(float floatValueToSearch, Float[] floatArray) {
         this.floatValueToSearch = floatValueToSearch;
         this.floatArray = floatArray;
         this.priorityQueue = new PriorityQueue<>(Arrays.asList(floatArray));
     }
-    
+
     /**
      * Запускає комплексну обробку даних з використанням черги.
      * 
@@ -60,7 +66,8 @@ public class BasicDataOperationUsingQueue {
     }
 
     /**
-     * Сортує масив об'єктiв LocalDateTime та виводить початковий i вiдсортований масиви.
+     * Сортує масив об'єктiв LocalDateTime та виводить початковий i вiдсортований
+     * масиви.
      * Вимiрює та виводить час, витрачений на сортування масиву в наносекундах.
      */
     private void performArraySorting() {
@@ -105,7 +112,8 @@ public class BasicDataOperationUsingQueue {
         PerformanceTracker.displayOperationTime(timeStart, "бінарний пошук елемента в масивi Float[]");
 
         if (position >= 0) {
-            System.out.println("Елемент '" + floatValueToSearch + "' знайдено в відсортованому масивi за позицією: " + position);
+            System.out.println(
+                    "Елемент '" + floatValueToSearch + "' знайдено в відсортованому масивi за позицією: " + position);
         } else {
             System.out.println("Елемент '" + floatValueToSearch + "' відсутній в відсортованому масиві.");
         }
@@ -127,12 +135,16 @@ public class BasicDataOperationUsingQueue {
         Float maxValue = floatArray[0];
 
         for (Float current : floatArray) {
-            if (current == null) continue;
-            if (minValue == null || current < minValue) minValue = current;
-            if (maxValue == null || current > maxValue) maxValue = current;
+            if (current == null)
+                continue;
+            if (minValue == null || current < minValue)
+                minValue = current;
+            if (maxValue == null || current > maxValue)
+                maxValue = current;
         }
 
-        PerformanceTracker.displayOperationTime(timeStart, "визначення мiнiмального i максимального значення в масивi Float[]");
+        PerformanceTracker.displayOperationTime(timeStart,
+                "визначення мiнiмального i максимального значення в масивi Float[]");
 
         System.out.println("Найменше значення в масивi: " + minValue);
         System.out.println("Найбільше значення в масивi: " + maxValue);
@@ -145,7 +157,8 @@ public class BasicDataOperationUsingQueue {
         // вимірюємо час пошуку в черзі
         long timeStart = System.nanoTime();
 
-        boolean elementExists = this.priorityQueue.contains(Float.valueOf(floatValueToSearch));
+        boolean elementExists = priorityQueue.stream()
+                .anyMatch(floatValue -> floatValue.equals(floatValueToSearch));
 
         PerformanceTracker.displayOperationTime(timeStart, "пошук елемента в PriorityQueue");
 
@@ -168,10 +181,16 @@ public class BasicDataOperationUsingQueue {
         // відстежуємо час пошуку граничних значень
         long timeStart = System.nanoTime();
 
-        Float minValue = priorityQueue.peek(); // для PriorityQueue це мінімум
-        Float maxValue = Collections.max(priorityQueue);
+        Float minValue = priorityQueue.stream()
+                .min(Float::compareTo)
+                .orElse(null);
 
-        PerformanceTracker.displayOperationTime(timeStart, "визначення мiнiмального i максимального значення в PriorityQueue");
+        Float maxValue = priorityQueue.stream()
+                .max(Float::compareTo)
+                .orElse(null);
+
+        PerformanceTracker.displayOperationTime(timeStart,
+                "визначення мiнiмального i максимального значення в PriorityQueue");
 
         System.out.println("Найменше значення в PriorityQueue: " + minValue);
         System.out.println("Найбільше значення в PriorityQueue: " + maxValue);

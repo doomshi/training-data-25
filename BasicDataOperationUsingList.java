@@ -21,7 +21,7 @@ public class BasicDataOperationUsingList {
      * Конструктор, який iнiцiалiзує об'єкт з готовими даними.
      * 
      * @param floatValueToSearch Значення для пошуку
-     * @param floatArray Масив Float[]
+     * @param floatArray         Масив Float[]
      */
     BasicDataOperationUsingList(float floatValueToSearch, Float[] floatArray) {
         this.floatValueToSearch = floatValueToSearch;
@@ -32,11 +32,11 @@ public class BasicDataOperationUsingList {
         this.linkedList = new LinkedList<>(base);
         this.vector = new Vector<>(base);
     }
-    
+
     /**
      * Виконує комплексні операції з структурами даних.
      * 
-     * Метод завантажує масив і список об'єктів LocalDateTime, 
+     * Метод завантажує масив і список об'єктів LocalDateTime,
      * здійснює сортування та пошукові операції.
      */
     public void executeDataOperations() {
@@ -50,7 +50,8 @@ public class BasicDataOperationUsingList {
         findInListLinear(vector, "Vector");
         locateMinMaxInList(vector, "Vector");
 
-        // Сортуємо та робимо бінарний пошук (Collections.binarySearch вимагає сортований список)
+        // Сортуємо та робимо бінарний пошук (Collections.binarySearch вимагає
+        // сортований список)
         sortList(arrayList, "ArrayList");
         findInListBinary(arrayList, "ArrayList");
 
@@ -79,8 +80,9 @@ public class BasicDataOperationUsingList {
      */
     void performArraySorting() {
         long timeStart = System.nanoTime();
-
-        Arrays.sort(floatArray);
+        floatArray = Arrays.stream(floatArray)
+                .sorted()
+                .toArray(Float[]::new);
 
         PerformanceTracker.displayOperationTime(timeStart, "упорядкування масиву Float[]");
     }
@@ -112,12 +114,17 @@ public class BasicDataOperationUsingList {
     void findInArrayBinary() {
         long timeStart = System.nanoTime();
 
-        int position = Arrays.binarySearch(this.floatArray, Float.valueOf(floatValueToSearch));
+        int position = Arrays.stream(floatArray)
+                .map(Arrays.asList(floatArray)::indexOf)
+                .filter(i -> floatValueToSearch.equals(floatArray[i]))
+                .findFirst()
+                .orElse(-1);
 
         PerformanceTracker.displayOperationTime(timeStart, "бінарний пошук елемента в масивi Float[]");
 
         if (position >= 0) {
-            System.out.println("Елемент '" + floatValueToSearch + "' знайдено в відсортованому масивi за позицією: " + position);
+            System.out.println(
+                    "Елемент '" + floatValueToSearch + "' знайдено в відсортованому масивi за позицією: " + position);
         } else {
             System.out.println("Елемент '" + floatValueToSearch + "' відсутній в відсортованому масиві.");
         }
@@ -138,12 +145,16 @@ public class BasicDataOperationUsingList {
         Float maxValue = floatArray[0];
 
         for (Float current : floatArray) {
-            if (current == null) continue;
-            if (minValue == null || current < minValue) minValue = current;
-            if (maxValue == null || current > maxValue) maxValue = current;
+            if (current == null)
+                continue;
+            if (minValue == null || current < minValue)
+                minValue = current;
+            if (maxValue == null || current > maxValue)
+                maxValue = current;
         }
 
-        PerformanceTracker.displayOperationTime(timeStart, "визначення мiнiмального i максимального значення в масивi Float[]");
+        PerformanceTracker.displayOperationTime(timeStart,
+                "визначення мiнiмального i максимального значення в масивi Float[]");
 
         System.out.println("Найменше значення в масивi: " + minValue);
         System.out.println("Найбільше значення в масивi: " + maxValue);
@@ -155,20 +166,21 @@ public class BasicDataOperationUsingList {
     void findInListLinear(List<Float> list, String listName) {
         long timeStart = System.nanoTime();
 
-        int position = -1;
-        for (int i = 0; i < list.size(); i++) {
-            Float v = list.get(i);
-            if (v != null && Float.compare(v, floatValueToSearch) == 0) {
-                position = i;
-                break;
-            }
-        }
+        int position = list.stream()
+                .map(list::indexOf)
+                .filter(i -> floatValueToSearch.equals(list.get(i)))
+                .findFirst()
+                .orElse(-1);
+    }
 
-        PerformanceTracker.displayOperationTime(timeStart, "лінійний пошук елемента в " + listName);
+    PerformanceTracker.displayOperationTime(timeStart,"лінійний пошук елемента в "+listName);
 
-        if (position >= 0) {
-            System.out.println("Елемент '" + floatValueToSearch + "' знайдено в " + listName + " за позицією: " + position);
-        } else {
+    if(position>=0)
+
+    {
+        System.out.println("Елемент '" + floatValueToSearch + "' знайдено в " + listName + " за позицією: " + position);
+    }else
+    {
             System.out.println("Елемент '" + floatValueToSearch + "' відсутній в " + listName + ".");
         }
     }
@@ -181,7 +193,8 @@ public class BasicDataOperationUsingList {
         PerformanceTracker.displayOperationTime(timeStart, "бінарний пошук елемента в " + listName);
 
         if (position >= 0) {
-            System.out.println("Елемент '" + floatValueToSearch + "' знайдено в відсортованому " + listName + " за позицією: " + position);
+            System.out.println("Елемент '" + floatValueToSearch + "' знайдено в відсортованому " + listName
+                    + " за позицією: " + position);
         } else {
             System.out.println("Елемент '" + floatValueToSearch + "' відсутній в відсортованому " + listName + ".");
         }
@@ -198,10 +211,16 @@ public class BasicDataOperationUsingList {
 
         long timeStart = System.nanoTime();
 
-        Float minValue = Collections.min(list);
-        Float maxValue = Collections.max(list);
+        Float min = Arrays.stream(floatArray)
+                .minValue(Float::compareTo)
+                .orElse(null);
 
-        PerformanceTracker.displayOperationTime(timeStart, "визначення мiнiмального i максимального значення в " + listName);
+        Float max = Arrays.stream(floatArray)
+                .maxValue(Float::compareTo)
+                .orElse(null);
+
+        PerformanceTracker.displayOperationTime(timeStart,
+                "визначення мiнiмального i максимального значення в " + listName);
 
         System.out.println("Найменше значення в " + listName + ": " + minValue);
         System.out.println("Найбільше значення в " + listName + ": " + maxValue);
@@ -214,7 +233,9 @@ public class BasicDataOperationUsingList {
     void sortList(List<Float> list, String listName) {
         long timeStart = System.nanoTime();
 
-        Collections.sort(list);
+        list = list.stream()
+                .sorted()
+                .collect(Collectors.toCollection(Vector::new));
 
         PerformanceTracker.displayOperationTime(timeStart, "упорядкування " + listName);
     }

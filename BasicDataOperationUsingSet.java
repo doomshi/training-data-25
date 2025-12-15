@@ -21,7 +21,7 @@ public class BasicDataOperationUsingSet {
      * Конструктор, який iнiцiалiзує об'єкт з готовими даними.
      * 
      * @param floatValueToSearch Значення для пошуку
-     * @param floatArray Масив Float[]
+     * @param floatArray         Масив Float[]
      */
     BasicDataOperationUsingSet(float floatValueToSearch, Float[] floatArray) {
         this.floatValueToSearch = floatValueToSearch;
@@ -31,7 +31,7 @@ public class BasicDataOperationUsingSet {
         this.treeSet = new TreeSet<>(Arrays.asList(floatArray));
         this.linkedHashSet = new LinkedHashSet<>(Arrays.asList(floatArray));
     }
-    
+
     /**
      * Запускає комплексний аналіз даних з використанням множини HashSet.
      * 
@@ -107,7 +107,8 @@ public class BasicDataOperationUsingSet {
         PerformanceTracker.displayOperationTime(timeStart, "бінарний пошук елемента в масивi Float[]");
 
         if (position >= 0) {
-            System.out.println("Елемент '" + floatValueToSearch + "' знайдено в відсортованому масивi за позицією: " + position);
+            System.out.println(
+                    "Елемент '" + floatValueToSearch + "' знайдено в відсортованому масивi за позицією: " + position);
         } else {
             System.out.println("Елемент '" + floatValueToSearch + "' відсутній в відсортованому масиві.");
         }
@@ -124,16 +125,25 @@ public class BasicDataOperationUsingSet {
 
         long timeStart = System.nanoTime();
 
-        Float minValue = floatArray[0];
-        Float maxValue = floatArray[0];
+        Float minValue = Set.stream()
+                .min(Float::compareTo)
+                .orElse(null);
+
+        Float maxValue = Set.stream()
+                .max(Float::compareTo)
+                .orElse(null);
 
         for (Float current : floatArray) {
-            if (current == null) continue;
-            if (minValue == null || current < minValue) minValue = current;
-            if (maxValue == null || current > maxValue) maxValue = current;
+            if (current == null)
+                continue;
+            if (minValue == null || current < minValue)
+                minValue = current;
+            if (maxValue == null || current > maxValue)
+                maxValue = current;
         }
 
-        PerformanceTracker.displayOperationTime(timeStart, "визначення мiнiмального i максимального значення в масивi Float[]");
+        PerformanceTracker.displayOperationTime(timeStart,
+                "визначення мiнiмального i максимального значення в масивi Float[]");
 
         System.out.println("Найменше значення в масивi: " + minValue);
         System.out.println("Найбільше значення в масивi: " + maxValue);
@@ -145,7 +155,8 @@ public class BasicDataOperationUsingSet {
     private void findInSet(Set<Float> set, String setName) {
         long timeStart = System.nanoTime();
 
-        boolean elementExists = set != null && set.contains(Float.valueOf(floatValueToSearch));
+        boolean elementExists = set.stream()
+            .anyMatch(float -> float.equals(floatValueToSearch));
 
         PerformanceTracker.displayOperationTime(timeStart, "пошук елемента в " + setName);
 
@@ -179,7 +190,8 @@ public class BasicDataOperationUsingSet {
             maxValue = Collections.max(set);
         }
 
-        PerformanceTracker.displayOperationTime(timeStart, "визначення мiнiмального i максимального значення в " + setName);
+        PerformanceTracker.displayOperationTime(timeStart,
+                "визначення мiнiмального i максимального значення в " + setName);
 
         System.out.println("Найменше значення в " + setName + ": " + minValue);
         System.out.println("Найбільше значення в " + setName + ": " + maxValue);
@@ -194,13 +206,8 @@ public class BasicDataOperationUsingSet {
         System.out.println("Кiлькiсть елементiв в TreeSet: " + treeSet.size());
         System.out.println("Кiлькiсть елементiв в LinkedHashSet: " + linkedHashSet.size());
 
-        boolean allElementsPresent = true;
-        for (Float element : floatArray) {
-            if (!hashSet.contains(element) || !treeSet.contains(element) || !linkedHashSet.contains(element)) {
-                allElementsPresent = false;
-                break;
-            }
-        }
+        boolean allElementsPresent = Arrays.stream(floatArray)
+                .allMatch(hashSet::contains);
 
         if (allElementsPresent) {
             System.out.println("Всi елементи масиву наявні у всіх множинах (HashSet/TreeSet/LinkedHashSet).");
