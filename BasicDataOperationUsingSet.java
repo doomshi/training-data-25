@@ -125,11 +125,11 @@ public class BasicDataOperationUsingSet {
 
         long timeStart = System.nanoTime();
 
-        Float minValue = Set.stream()
+        Float minValue = hashSet.stream()
                 .min(Float::compareTo)
                 .orElse(null);
 
-        Float maxValue = Set.stream()
+        Float maxValue = hashSet.stream()
                 .max(Float::compareTo)
                 .orElse(null);
 
@@ -156,7 +156,7 @@ public class BasicDataOperationUsingSet {
         long timeStart = System.nanoTime();
 
         boolean elementExists = set.stream()
-            .anyMatch(float -> float.equals(floatValueToSearch));
+                .anyMatch(Float -> Float.equals(floatValueToSearch));
 
         PerformanceTracker.displayOperationTime(timeStart, "пошук елемента в " + setName);
 

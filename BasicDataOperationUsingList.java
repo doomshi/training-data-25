@@ -10,7 +10,7 @@ import java.util.Vector;
  * ArrayList, LinkedList та Vector для даних типу float (Float).
  */
 public class BasicDataOperationUsingList {
-    private final float floatValueToSearch;
+    private final Float floatValueToSearch;
     private final Float[] floatArray;
 
     private final ArrayList<Float> arrayList;
@@ -171,16 +171,15 @@ public class BasicDataOperationUsingList {
                 .filter(i -> floatValueToSearch.equals(list.get(i)))
                 .findFirst()
                 .orElse(-1);
-    }
 
-    PerformanceTracker.displayOperationTime(timeStart,"лінійний пошук елемента в "+listName);
+        PerformanceTracker.displayOperationTime(timeStart, "лінійний пошук елемента в " + listName);
 
-    if(position>=0)
+        if (position >= 0)
 
-    {
-        System.out.println("Елемент '" + floatValueToSearch + "' знайдено в " + listName + " за позицією: " + position);
-    }else
-    {
+        {
+            System.out.println(
+                    "Елемент '" + floatValueToSearch + "' знайдено в " + listName + " за позицією: " + position);
+        } else {
             System.out.println("Елемент '" + floatValueToSearch + "' відсутній в " + listName + ".");
         }
     }
