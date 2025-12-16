@@ -7,18 +7,22 @@ import java.util.Map;
 import java.util.TreeMap;
 
 /**
- * Клас BasicDataOperationUsingMap реалізує операції з колекціями типу Map для зберігання пар ключ-значення.
+ * Клас BasicDataOperationUsingMap реалізує операції з колекціями типу Map для
+ * зберігання пар ключ-значення.
  * 
- * <p>Методи класу:</p>
+ * <p>
+ * Методи класу:
+ * </p>
  * <ul>
- *   <li>{@link #executeDataOperations()} - Виконує комплекс операцій з даними Map.</li>
- *   <li>{@link #findByKey()} - Здійснює пошук елемента за ключем в Map.</li>
- *   <li>{@link #findByValue()} - Здійснює пошук елемента за значенням в Map.</li>
- *   <li>{@link #addEntry()} - Додає новий запис до Map.</li>
- *   <li>{@link #removeByKey()} - Видаляє запис з Map за ключем.</li>
- *   <li>{@link #removeByValue()} - Видаляє записи з Map за значенням.</li>
- *   <li>{@link #sortByKey()} - Сортує Map за ключами.</li>
- *   <li>{@link #sortByValue()} - Сортує Map за значеннями.</li>
+ * <li>{@link #executeDataOperations()} - Виконує комплекс операцій з даними
+ * Map.</li>
+ * <li>{@link #findByKey()} - Здійснює пошук елемента за ключем в Map.</li>
+ * <li>{@link #findByValue()} - Здійснює пошук елемента за значенням в Map.</li>
+ * <li>{@link #addEntry()} - Додає новий запис до Map.</li>
+ * <li>{@link #removeByKey()} - Видаляє запис з Map за ключем.</li>
+ * <li>{@link #removeByValue()} - Видаляє записи з Map за значенням.</li>
+ * <li>{@link #sortByKey()} - Сортує Map за ключами.</li>
+ * <li>{@link #sortByValue()} - Сортує Map за значеннями.</li>
  * </ul>
  */
 public class BasicDataOperationUsingMap {
@@ -42,169 +46,50 @@ public class BasicDataOperationUsingMap {
         public int compare(Map.Entry<Tortoise, String> e1, Map.Entry<Tortoise, String> e2) {
             String v1 = e1.getValue();
             String v2 = e2.getValue();
-            if (v1 == null && v2 == null) return 0;
-            if (v1 == null) return -1;
-            if (v2 == null) return 1;
+            if (v1 == null && v2 == null)
+                return 0;
+            if (v1 == null)
+                return -1;
+            if (v2 == null)
+                return 1;
             return v1.compareTo(v2);
         }
     }
 
+    private static final Comparator<Tortoise> PET_COMPARATOR = Comparator.comparing(Tortoise::nickname)
+            .thenComparing(Tortoise::shellThickness, Comparator.reverseOrder());
+
     /**
-     * Внутрішній клас Tortoise для зберігання інформації про домашню тварину (сухопутна черепаха).
-     * 
-     * Характеристики:
-     * - nickname (кличка)
-     * - shellThickness (товщина панциря, Double)
-     *
-     * Сортування (природний порядок):
-     * - кличка (nickname) — за зростанням
-     * - товщина панциря (shellThickness) — за зростанням
+     * Record Tortoise для зберігання інформації про домашню тварину (сухопутна
+     * черепаха).
      */
-    public static class Tortoise implements Comparable<Tortoise> {
-        private final String nickname;
-        private final Double shellThickness;
-
-        public Tortoise(String nickname) {
-            this.nickname = nickname;
-            this.shellThickness = null;
-        }
-
-        public Tortoise(String nickname, Double shellThickness) {
-            this.nickname = nickname;
-            this.shellThickness = shellThickness;
-        }
-
-        public String getNickname() { 
-            return nickname; 
-        }
-
-        public Double getShellThickness() {
-            return shellThickness;
-        }
-
-        /**
-         * Порівнює цей об'єкт Tortoise з іншим для визначення порядку сортування.
-         * 
-         * @param other Tortoise об'єкт для порівняння
-         * @return негативне число, якщо цей Tortoise < other;
-         *         0, якщо цей Tortoise == other;
-         *         позитивне число, якщо цей Tortoise > other
-         * 
-         * Критерій порівняння: nickname (за зростанням), потім shellThickness (за зростанням).
-         * 
-         * Цей метод використовується:
-         * - TreeMap для автоматичного сортування ключів Tortoise
-         * - Collections.sort() для сортування ключів
-         * - Collections.binarySearch() для пошуку в відсортованих колекціях
-         */
-        @Override
-        public int compareTo(Tortoise other) {
-            if (other == null) return 1;
-            
-            // Спочатку порівнюємо за кличкою (за зростанням)
-            int nicknameComparison = 0;
-            if (this.nickname == null && other.nickname == null) {
-                nicknameComparison = 0;
-            } else if (this.nickname == null) {
-                nicknameComparison = -1;
-            } else if (other.nickname == null) {
-                nicknameComparison = 1;
-            } else {
-                nicknameComparison = this.nickname.compareTo(other.nickname);
-            }
-            
-            // Якщо клички різні, повертаємо результат
-            if (nicknameComparison != 0) {
-                return nicknameComparison;
-            }
-            
-            // Якщо клички однакові, порівнюємо за товщиною панциря (за зростанням)
-            if (this.shellThickness == null && other.shellThickness == null) return 0;
-            if (this.shellThickness == null) return -1;
-            if (other.shellThickness == null) return 1;
-            return this.shellThickness.compareTo(other.shellThickness);
-        }
-
-        /**
-         * Перевіряє рівність цього Tortoise з іншим об'єктом.
-         * Два Tortoise вважаються рівними, якщо їх nickname та shellThickness однакові.
-         * 
-         * @param obj об'єкт для порівняння
-         * @return true, якщо об'єкти рівні; false в іншому випадку
-         * 
-         * Критерій рівності: nickname та shellThickness.
-         * 
-         * Важливо: метод узгоджений з compareTo() - якщо equals() повертає true,
-         * то compareTo() повертає 0, оскільки обидва методи порівнюють за nickname та shellThickness.
-         */
-        @Override
-        public boolean equals(Object obj) {
-            if (this == obj) return true;
-            if (obj == null || getClass() != obj.getClass()) return false;
-            Tortoise tortoise = (Tortoise) obj;
-            
-            boolean nicknameEquals = nickname != null ? nickname.equals(tortoise.nickname) : tortoise.nickname == null;
-            boolean shellEquals = shellThickness != null ? shellThickness.equals(tortoise.shellThickness) : tortoise.shellThickness == null;
-            
-            return nicknameEquals && shellEquals;
-        }
-
-        /**
-         * Повертає хеш-код для цього Tortoise.
-         * 
-         * @return хеш-код, обчислений на основі nickname та shellThickness
-         * 
-         * Базується на полях nickname та shellThickness для узгодженості з equals().
-         * 
-         * Важливо: узгоджений з equals() - якщо два Tortoise рівні за equals(),
-         * вони матимуть однаковий hashCode().
-         */
-        @Override
-        public int hashCode() {
-            // Початкове значення: хеш-код поля nickname (або 0, якщо nickname == null)
-            int result = nickname != null ? nickname.hashCode() : 0;
-            
-            // Комбінуємо хеш-коди полів за формулою: result = 31 * result + hashCode(поле)
-            // Множник 31 - просте число, яке дає хороше розподілення хеш-кодів
-            // і оптимізується JVM як (result << 5) - result
-            // Додаємо хеш-код товщини панциря (або 0, якщо shellThickness == null) до загального результату
-            result = 31 * result + (shellThickness != null ? shellThickness.hashCode() : 0);
-            
-            return result;
-        }
-
-        /**
-         * Повертає строкове представлення Tortoise.
-         * 
-         * @return nickname, shellThickness та hashCode
-         */
-        @Override
-        public String toString() {
-            return "Tortoise{nickname='" + nickname + "', shellThickness=" + shellThickness + ", hashCode=" + hashCode() + "}";
-        }
+    public record Tortoise(String nickname, Double shellThickness) {
     }
 
     /**
      * Конструктор, який ініціалізує об'єкт з готовими даними.
      * 
-     * @param hashMap HashMap з початковими даними (ключ: Tortoise, значення: ім'я власника)
-     * @param treeMap TreeMap з початковими даними (ключ: Tortoise, значення: ім'я власника)
+     * @param hashMap HashMap з початковими даними (ключ: Tortoise, значення: ім'я
+     *                власника)
+     * @param treeMap TreeMap з початковими даними (ключ: Tortoise, значення: ім'я
+     *                власника)
      */
     BasicDataOperationUsingMap(HashMap<Tortoise, String> hashMap, TreeMap<Tortoise, String> treeMap) {
         this.hashMap = hashMap;
         this.treeMap = treeMap;
     }
-    
+
     /**
      * Виконує комплексні операції з Map.
      * 
-     * Метод виконує різноманітні операції з Map: пошук, додавання, видалення та сортування.
+     * Метод виконує різноманітні операції з Map: пошук, додавання, видалення та
+     * сортування.
      */
     public void executeDataOperations() {
         // Спочатку працюємо з HashMap
         System.out.println("========= Операції з HashMap =========");
         System.out.println("Початковий розмір HashMap: " + hashMap.size());
-        
+
         // Пошук до сортування
         findByKeyInHashMap();
         findByValueInHashMap();
@@ -212,29 +97,28 @@ public class BasicDataOperationUsingMap {
         printHashMap();
 
         addEntryToHashMap();
-        
+
         removeByKeyFromHashMap();
         removeByValueFromHashMap();
-               
+
         System.out.println("Кінцевий розмір HashMap: " + hashMap.size());
 
         // Потім обробляємо TreeMap
         System.out.println("\n\n========= Операції з TreeMap =========");
         System.out.println("Початковий розмір TreeMap: " + treeMap.size());
-        
+
         findByKeyInTreeMap();
         findByValueInTreeMap();
 
         printTreeMap();
 
         addEntryToTreeMap();
-        
+
         removeByKeyFromTreeMap();
         removeByValueFromTreeMap();
-        
+
         System.out.println("Кінцевий розмір TreeMap: " + treeMap.size());
     }
-
 
     // ===== Методи для HashMap =====
 
@@ -285,9 +169,17 @@ public class BasicDataOperationUsingMap {
 
         // Створюємо тимчасовий Entry для пошуку
         Map.Entry<Tortoise, String> searchEntry = new Map.Entry<Tortoise, String>() {
-            public Tortoise getKey() { return null; }
-            public String getValue() { return VALUE_TO_SEARCH_AND_DELETE; }
-            public String setValue(String value) { return null; }
+            public Tortoise getKey() {
+                return null;
+            }
+
+            public String getValue() {
+                return VALUE_TO_SEARCH_AND_DELETE;
+            }
+
+            public String setValue(String value) {
+                return null;
+            }
         };
 
         int position = Collections.binarySearch(entries, searchEntry, comparator);
@@ -296,7 +188,8 @@ public class BasicDataOperationUsingMap {
 
         if (position >= 0) {
             Map.Entry<Tortoise, String> foundEntry = entries.get(position);
-            System.out.println("Власника '" + VALUE_TO_SEARCH_AND_DELETE + "' знайдено. Tortoise: " + foundEntry.getKey());
+            System.out.println(
+                    "Власника '" + VALUE_TO_SEARCH_AND_DELETE + "' знайдено. Tortoise: " + foundEntry.getKey());
         } else {
             System.out.println("Власник '" + VALUE_TO_SEARCH_AND_DELETE + "' відсутній в HashMap.");
         }
@@ -326,7 +219,8 @@ public class BasicDataOperationUsingMap {
         PerformanceTracker.displayOperationTime(timeStart, "видалення за ключем з HashMap");
 
         if (removedValue != null) {
-            System.out.println("Видалено запис з ключем '" + KEY_TO_SEARCH_AND_DELETE + "'. Власник був: " + removedValue);
+            System.out.println(
+                    "Видалено запис з ключем '" + KEY_TO_SEARCH_AND_DELETE + "'. Власник був: " + removedValue);
         } else {
             System.out.println("Ключ '" + KEY_TO_SEARCH_AND_DELETE + "' не знайдено для видалення.");
         }
@@ -344,21 +238,23 @@ public class BasicDataOperationUsingMap {
                 keysToRemove.add(entry.getKey());
             }
         }
-        
+
         for (Tortoise key : keysToRemove) {
             hashMap.remove(key);
         }
 
         PerformanceTracker.displayOperationTime(timeStart, "видалення за значенням з HashMap");
 
-        System.out.println("Видалено " + keysToRemove.size() + " записів з власником '" + VALUE_TO_SEARCH_AND_DELETE + "'");
+        System.out.println(
+                "Видалено " + keysToRemove.size() + " записів з власником '" + VALUE_TO_SEARCH_AND_DELETE + "'");
     }
 
     // ===== Методи для TreeMap =====
 
     /**
      * Виводить вміст TreeMap.
-     * TreeMap автоматично відсортована за ключами (Tortoise: nickname за зростанням, shellThickness за зростанням).
+     * TreeMap автоматично відсортована за ключами (Tortoise: nickname за
+     * зростанням, shellThickness за зростанням).
      */
     private void printTreeMap() {
         System.out.println("\n=== Пари ключ-значення в TreeMap ===");
@@ -404,9 +300,17 @@ public class BasicDataOperationUsingMap {
 
         // Створюємо тимчасовий Entry для пошуку
         Map.Entry<Tortoise, String> searchEntry = new Map.Entry<Tortoise, String>() {
-            public Tortoise getKey() { return null; }
-            public String getValue() { return VALUE_TO_SEARCH_AND_DELETE; }
-            public String setValue(String value) { return null; }
+            public Tortoise getKey() {
+                return null;
+            }
+
+            public String getValue() {
+                return VALUE_TO_SEARCH_AND_DELETE;
+            }
+
+            public String setValue(String value) {
+                return null;
+            }
         };
 
         int position = Collections.binarySearch(entries, searchEntry, comparator);
@@ -415,7 +319,8 @@ public class BasicDataOperationUsingMap {
 
         if (position >= 0) {
             Map.Entry<Tortoise, String> foundEntry = entries.get(position);
-            System.out.println("Власника '" + VALUE_TO_SEARCH_AND_DELETE + "' знайдено. Tortoise: " + foundEntry.getKey());
+            System.out.println(
+                    "Власника '" + VALUE_TO_SEARCH_AND_DELETE + "' знайдено. Tortoise: " + foundEntry.getKey());
         } else {
             System.out.println("Власник '" + VALUE_TO_SEARCH_AND_DELETE + "' відсутній в TreeMap.");
         }
@@ -445,7 +350,8 @@ public class BasicDataOperationUsingMap {
         PerformanceTracker.displayOperationTime(timeStart, "видалення за ключем з TreeMap");
 
         if (removedValue != null) {
-            System.out.println("Видалено запис з ключем '" + KEY_TO_SEARCH_AND_DELETE + "'. Власник був: " + removedValue);
+            System.out.println(
+                    "Видалено запис з ключем '" + KEY_TO_SEARCH_AND_DELETE + "'. Власник був: " + removedValue);
         } else {
             System.out.println("Ключ '" + KEY_TO_SEARCH_AND_DELETE + "' не знайдено для видалення.");
         }
@@ -463,21 +369,23 @@ public class BasicDataOperationUsingMap {
                 keysToRemove.add(entry.getKey());
             }
         }
-        
+
         for (Tortoise key : keysToRemove) {
             treeMap.remove(key);
         }
 
         PerformanceTracker.displayOperationTime(timeStart, "видалення за значенням з TreeMap");
 
-        System.out.println("Видалено " + keysToRemove.size() + " записів з власником '" + VALUE_TO_SEARCH_AND_DELETE + "'");
+        System.out.println(
+                "Видалено " + keysToRemove.size() + " записів з власником '" + VALUE_TO_SEARCH_AND_DELETE + "'");
     }
 
     /**
      * Головний метод для запуску програми.
      */
     public static void main(String[] args) {
-        // Створюємо початкові дані (ключ: Tortoise, значення: власник/власниця) - з умови
+        // Створюємо початкові дані (ключ: Tortoise, значення: власник/власниця) - з
+        // умови
         HashMap<Tortoise, String> hashMap = new HashMap<>();
         hashMap.put(new Tortoise("Атлант", 2.5), "Руслан");
         hashMap.put(new Tortoise("Броня", 3.1), "Олеся");
@@ -490,18 +398,17 @@ public class BasicDataOperationUsingMap {
         hashMap.put(new Tortoise("Зевс", 3.9), "Олеся");
         hashMap.put(new Tortoise("Ікар", 2.7), "Надія");
 
-        TreeMap<Tortoise, String> treeMap = new TreeMap<Tortoise, String>() {{
-            put(new Tortoise("Атлант", 2.5), "Руслан");
-            put(new Tortoise("Броня", 3.1), "Олеся");
-            put(new Tortoise("Вічність", 4.2), "Микола");
-            put(new Tortoise("Гном", 1.8), "Аліна");
-            put(new Tortoise("Броня", 2.9), "Тимур");
-            put(new Tortoise("Дзвін", 3.7), "Микола");
-            put(new Tortoise("Еон", 4.5), "Софія");
-            put(new Tortoise("Жук", 2.2), "Віталій");
-            put(new Tortoise("Зевс", 3.9), "Олеся");
-            put(new Tortoise("Ікар", 2.7), "Надія");
-        }};
+        TreeMap<Tortoise, String> treeMap = new TreeMap<>(PET_COMPARATOR);
+        treeMap.put(new Tortoise("Атлант", 2.5), "Руслан");
+        treeMap.put(new Tortoise("Броня", 3.1), "Олеся");
+        treeMap.put(new Tortoise("Вічність", 4.2), "Микола");
+        treeMap.put(new Tortoise("Гном", 1.8), "Аліна");
+        treeMap.put(new Tortoise("Броня", 2.9), "Тимур");
+        treeMap.put(new Tortoise("Дзвін", 3.7), "Микола");
+        treeMap.put(new Tortoise("Еон", 4.5), "Софія");
+        treeMap.put(new Tortoise("Жук", 2.2), "Віталій");
+        treeMap.put(new Tortoise("Зевс", 3.9), "Олеся");
+        treeMap.put(new Tortoise("Ікар", 2.7), "Надія");
 
         // Створюємо об'єкт і виконуємо операції
         BasicDataOperationUsingMap operations = new BasicDataOperationUsingMap(hashMap, treeMap);
